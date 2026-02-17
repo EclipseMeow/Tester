@@ -1691,12 +1691,12 @@ print('--[[Loaded UI]]--')
 
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local Window = Fluent:CreateWindow({
-    Title = 'Eclipse Hub',
-    SubTitle = 'by Araujo',
+    Title = 'Banana Cat Hub [ Premium ]',
+    SubTitle = 'by obii',
     TabWidth = 155,
     Size = UDim2.fromOffset(500, 350),
     Acrylic = false,
-    Theme = 'Aqua',
+    Theme = 'Dark',
     MinimizeKey = Enum.KeyCode.End,
 })
 
@@ -11145,7 +11145,7 @@ Input = Tabs.PVP:AddInput('Input', {
 game.StarterGui:SetCore('SendNotification', {
     Title = 'Yes Or No',
     Text = 'U want reset Config?',
-    Icon = 'rbxassetid://112518061635682',
+    Icon = 'rbxassetid://5009915795',
     Duration = 100000,
     Button1 = 'Yes',
     Button2 = 'No',
@@ -11189,7 +11189,7 @@ Image.AnchorPoint = Vector2.new(0.5, 0.5)
 Image.Position = UDim2.new(0.5, 0, 0.5, 0)
 Image.Size = UDim2.new(0, 40, 0, 40)
 Image.BackgroundTransparency = 1
-Image.Image = "rbxassetid://112518061635682"
+Image.Image = "rbxassetid://5009915795"
 
 -- Botão invisível
 local Button = Instance.new("TextButton")
