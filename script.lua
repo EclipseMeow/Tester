@@ -1691,8 +1691,8 @@ print('--[[Loaded UI]]--')
 
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local Window = Fluent:CreateWindow({
-    Title = 'M3Ow Hub [Freemium]',
-    SubTitle = 'By M3Ow Cat And 1x1x1x1x1x1',
+    Title = 'M3OWl Cat Hub V2 [ Freemium ]',
+    SubTitle = 'by M3Owl and 1x1x1x1x1x1x1',
     TabWidth = 155,
     Size = UDim2.fromOffset(500, 350),
     Acrylic = false,
@@ -1708,7 +1708,6 @@ local Tabs = {
   Main = Window:AddTab({Title = "Tab Farming", Icon = ""}),
   Stack = Window:AddTab({Title = "Tab Stack Farm", Icon = ""}),
   Other = Window:AddTab({Title = "Tab Farming Other", Icon = ""}),
-  Valentine = Window:AddTab({Title = "Tab Valentines Day", Icon = ""}),
   Blog = Window:AddTab({Title = "Tab Fruit And Raid", Icon = ""}),
   Sea = Window:AddTab({Title = "Tab Sea Event", Icon = ""}),
   ChooseSkill = Window:AddTab({Title = "Tab Setting Select Skill", Icon = ""}),
@@ -3605,7 +3604,7 @@ Tabs.Main:AddButton({
     Title = "Copy Discord Invite",
     Callback = function()
         if setclipboard then
-            setclipboard("https://discord.gg/RdmvSqRA")
+            setclipboard("https://discord.gg/2YCGftRB")
         end
     end
 })
@@ -6607,42 +6606,6 @@ spawn(function()
     end
 end)
 
-Tabs.Valentine:AddToggle('AutoGacha', {
-    Title = 'Auto Random Valentine Gacha',
-    Default = false,
-}):OnChanged(function(Value)
-    _G.AutoValentineGacha = Value
-end)
-
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Remotes = ReplicatedStorage:WaitForChild("Remotes")
-local CommF = Remotes:WaitForChild("CommF_")
-
-local function fireActivity()
-    local reportRemote = ReplicatedStorage:FindFirstChild("ReportActivity", true)
-    if reportRemote and reportRemote:IsA("RemoteEvent") then
-        pcall(function()
-            reportRemote:FireServer("GachaWindow")
-        end)
-    end
-end
-
-task.spawn(function()
-    while true do
-        if _G.AutoValentineGacha then
-            pcall(function()
-                CommF:InvokeServer("Cousin")
-                task.wait(0.1)
-                fireActivity()
-                task.wait(0.1)
-                CommF:InvokeServer("Cousin", "CheckCanBuyType", "ValentinesGacha26")
-                task.wait(0.1)
-                CommF:InvokeServer("Cousin", "ValentinesGacha26")
-            end)
-        end
-        task.wait(2.5)
-    end
-end)
 
 Tabs.Blog:AddToggle('Toggle', {
     Title = 'Random Devil Fruit',
@@ -7133,7 +7096,7 @@ spawn(function()
 end)
 
 if World2 then
-    Tabs.Blog:AddButton({
+    Blog:AddButton({
         Title = 'Teleport To Lab',
         Description = '',
         Callback = function()
@@ -7142,7 +7105,7 @@ if World2 then
     })
 end
 if World3 then
-    Tabs.Blog:AddButton({
+    Blog:AddButton({
         Title = 'Teleport To Lab',
         Description = '',
         Callback = function()
@@ -11182,7 +11145,7 @@ Input = Tabs.PVP:AddInput('Input', {
 game.StarterGui:SetCore('SendNotification', {
     Title = 'Yes Or No',
     Text = 'U want reset Config?',
-    Icon = 'rbxassetid://118405308091311',
+    Icon = 'rbxassetid://84722735301781',
     Duration = 100000,
     Button1 = 'Yes',
     Button2 = 'No',
@@ -11224,8 +11187,8 @@ local Image = Instance.new("ImageLabel")
 Image.Parent = Frame
 Image.AnchorPoint = Vector2.new(0.5, 0.5)
 Image.Position = UDim2.new(0.5, 0, 0.5, 0)
-Image.Size = UDim2.new(0, 10, 0, 10)
-Image.BackgroundTransparency = 0
+Image.Size = UDim2.new(0, 40, 0, 40)
+Image.BackgroundTransparency = 1
 Image.Image = "rbxassetid://118405308091311"
 
 -- Botão invisível
@@ -11550,10 +11513,10 @@ while true do
     end
 end
 
-print('\u{2705} Smooth + Stable Anti-Lag Activated - Made by M3Ow Cat')
+print('\u{2705} Smooth + Stable Anti-Lag Activated - Made by 1x1x1x1x1')
 game.StarterGui:SetCore('SendNotification', {
     Title = 'UPDATE!',
-    Text = 'M3Ow Loader New\u{2705}',
-    Icon = 'rbxassetid://118405308091311',
+    Text = 'Fixed Loader V2\u{2705}',
+    Icon = 'rbxassetid://84722735301781',
     Duration = 8,
 })
