@@ -1,30 +1,16 @@
 local WindUI = (loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/download/2.3.0/main.lua")))();
-WindUI:SetTheme({
-	Background = Color3.fromRGB(30, 30, 30),
-	Secondary = Color3.fromRGB(40, 40, 40),
-	Tertiary = Color3.fromRGB(50, 50, 50),
-	Text = Color3.fromRGB(255, 255, 255),
-	SubText = Color3.fromRGB(180, 180, 180),
-	Accent = Color3.fromRGB(255, 140, 0),
-	AccentDark = Color3.fromRGB(200, 100, 0),
-	AccentLight = Color3.fromRGB(255, 180, 50),
-	WindowShadow = Color3.fromRGB(0, 0, 0),
-	Outline = Color3.fromRGB(60, 60, 60),
-	Toggle = Color3.fromRGB(255, 140, 0),
-});
 local Window = WindUI:CreateWindow({
-    Title = "🪐Saturn Hub🪐",
+    Title = "☄️Eclipse Hub☄️",
     Author = "By 1x1x1x1x1x1 And David Baszucki",
-    Folder = "Saturn Gen3",
+    Folder = "Eclipse Lunar Gen4",
     Size = UDim2.fromOffset(520, 300),
     Transparent = true,
-    Theme = "Default",
-    Accent = Color3.fromRGB(255, 140, 0),
+    Theme = "Aqua",
     SideBarWidth = 190,
     HasOutline = false,
 });
 Window:EditOpenButton({
-    Title = "🪐Saturn Hub🪐",
+    Title = "☄️Eclipse Hub☄️",
     CornerRadius = UDim.new(0, 10),
     Draggable = false
 });
@@ -44,20 +30,30 @@ local Tabs = {
 		Icon = "box",
 		Desc = "Items Section"
 	}),
-	SettingsTab = Window:Tab({
-		Title = "Settings",
-		Icon = "settings",
-		Desc = "Settings Section"
+	FruitTab = Window:Tab({
+		Title = "Fruit",
+		Icon = "vegan",
+		Desc = "Fruit Section"
 	}),
-	LocalPlayerTab = Window:Tab({
-		Title = "Local Player",
-		Icon = "user",
-		Desc = "Local Player Section"
+	RaidTab = Window:Tab({
+		Title = "Raid",
+		Icon = "door-open",
+		Desc = "Raid Section"
 	}),
-	StatsTab = Window:Tab({
-		Title = "Stats",
-		Icon = "chart-no-axes-column",
-		Desc = "Stats Section"
+	CombatTab = Window:Tab({
+		Title = "Combat",
+		Icon = "sword",
+		Desc = "Combat Section"
+	}),
+	RaceTab = Window:Tab({
+		Title = "Race",
+		Icon = "bot",
+		Desc = "Race Section"
+	}),
+	DragonDojoTab = Window:Tab({
+		Title = "Dragon Dojo",
+		Icon = "shield",
+		Desc = "Dragon Dojo Section"
 	}),
 	SeaEventTab = Window:Tab({
 		Title = "Sea Event",
@@ -69,31 +65,6 @@ local Tabs = {
 		Icon = "waves",
 		Desc = "Sea Stack Section"
 	}),
-	SeaSettingsTab = Window:Tab({
-		Title = "Sea Settings",
-		Icon = "cog",
-		Desc = "Sea Settings Section"
-	}),
-	DragonDojoTab = Window:Tab({
-		Title = "Dragon Dojo",
-		Icon = "shield",
-		Desc = "Dragon Dojo Section"
-	}),
-	RaceTab = Window:Tab({
-		Title = "Race",
-		Icon = "bot",
-		Desc = "Race Section"
-	}),
-	CombatTab = Window:Tab({
-		Title = "Combat",
-		Icon = "sword",
-		Desc = "Combat Section"
-	}),
-	RaidTab = Window:Tab({
-		Title = "Raid",
-		Icon = "door-open",
-		Desc = "Raid Section"
-	}),
 	EspTab = Window:Tab({
 		Title = "Esp",
 		Icon = "scan-eye",
@@ -104,15 +75,25 @@ local Tabs = {
 		Icon = "map-pinned",
 		Desc = "Teleport Section"
 	}),
-	ShopTab = Window:Tab({
-		Title = "Shop",
-		Icon = "shopping-cart",
-		Desc = "Shop Section"
+	LocalPlayerTab = Window:Tab({
+		Title = "Local Player",
+		Icon = "user",
+		Desc = "Local Player Section"
 	}),
-	FruitTab = Window:Tab({
-		Title = "Fruit",
-		Icon = "vegan",
-		Desc = "Fruit Section"
+	StatsTab = Window:Tab({
+		Title = "Stats",
+		Icon = "chart-no-axes-column",
+		Desc = "Stats Section"
+	}),
+	SettingsTab = Window:Tab({
+		Title = "Settings",
+		Icon = "settings",
+		Desc = "Settings Section"
+	}),
+	SeaSettingsTab = Window:Tab({
+		Title = "Sea Settings",
+		Icon = "cog",
+		Desc = "Sea Settings Section"
 	}),
 	MiscTab = Window:Tab({
 		Title = "Misc",
@@ -123,7 +104,12 @@ local Tabs = {
 		Title = "Server",
 		Icon = "server",
 		Desc = "Server Section"
-	})
+	}),
+	ShopTab = Window:Tab({
+		Title = "Shop",
+		Icon = "shopping-cart",
+		Desc = "Shop Section"
+	}),
 };
 Window:SelectTab(1);
 _G.Settings = {
