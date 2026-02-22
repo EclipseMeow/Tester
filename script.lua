@@ -5,7 +5,7 @@ local Window = WindUI:CreateWindow({
     Folder = "Eclipse Lunar Gen4",
     Size = UDim2.fromOffset(520, 300),
     Transparent = true,
-    Theme = "Default",
+    Theme = "Aqua",
     Accent = Color3.fromRGB(0, 200, 220),
     SideBarWidth = 190,
     HasOutline = false,
@@ -10093,3 +10093,4 @@ spawn(function()
 		end);
 	end;
 end);
+
