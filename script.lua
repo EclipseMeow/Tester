@@ -1332,24 +1332,29 @@ ChestBypass:OnChanged(function(Value)
   _G.ChestBypassLoop = Value
 end)
 spawn(function()
-  while task.wait(7) do
+  local _chestTimer = 0
+  while task.wait(0.3) do
     if _G.ChestBypassLoop then
       pcall(function()
         local CollectionService = game:GetService("CollectionService")
         local Chests = CollectionService:GetTagged("_ChestTagged")
         local char = plr.Character
-        if not char then return end
+        if not char or not char:FindFirstChild("HumanoidRootPart") then return end
         for _, chest in ipairs(Chests) do
-          if not chest:GetAttribute("IsDisabled") then
+          if chest and chest.Parent and not chest:GetAttribute("IsDisabled") then
             pcall(function()
               char.HumanoidRootPart.CFrame = chest:GetPivot()
-              char.Humanoid.Jump = true
-              task.wait(0.1)
+              task.wait(0.08)
             end)
           end
         end
-        plr.Character.Humanoid.Health = 0
-        task.wait(4)
+        _chestTimer = _chestTimer + 0.3
+        if _chestTimer >= 7 then
+          _chestTimer = 0
+          local hum = char:FindFirstChildOfClass("Humanoid")
+          if hum then hum.Jump = true end
+          task.wait(0.5)
+        end
       end)
     end
   end
@@ -1561,9 +1566,12 @@ spawn(function()
         _G.AutoTirantBoss = false
         return
       end
-      local myHp = plr.Character.Humanoid.Health
-      local myMaxHp = plr.Character.Humanoid.MaxHealth
-      local tirantBoss = workspace.Enemies:FindFirstChild("Tirant Of Skies") or workspace.Enemies:FindFirstChild("TirantOfSkies")
+      local _char = plr.Character
+      if not _char or not _char:FindFirstChild("HumanoidRootPart") then return end
+      local myHp = _char:FindFirstChildOfClass("Humanoid") and _char:FindFirstChildOfClass("Humanoid").Health or 0
+      local myMaxHp = _char:FindFirstChildOfClass("Humanoid") and _char:FindFirstChildOfClass("Humanoid").MaxHealth or 0
+      local _enemies = workspace:FindFirstChild("Enemies") or workspace:FindFirstChild("Characters")
+      local tirantBoss = _enemies and (_enemies:FindFirstChild("Tirant Of Skies") or _enemies:FindFirstChild("TirantOfSkies"))
       local hasSkullGuitar = plr.Backpack:FindFirstChild("Skull Guitar") or plr.Character:FindFirstChild("Skull Guitar")
       if _tirantPhase == "farm" then
         if _tirantKillCount >= 400 then
@@ -1586,6 +1594,8 @@ spawn(function()
           _tp(TikiNPCPos)
         end
       elseif _tirantPhase == "break_vases" then
+        local _en3 = workspace:FindFirstChild("Enemies") or workspace:FindFirstChild("Characters")
+        tirantBoss = _en3 and (_en3:FindFirstChild("Tirant Of Skies") or _en3:FindFirstChild("TirantOfSkies"))
         if tirantBoss and Attack.Alive(tirantBoss) then
           _tirantPhase = "fight_boss"
           return
@@ -1611,13 +1621,15 @@ spawn(function()
             if leftClick then leftClick:FireServer(Root.CFrame.LookVector * 50, 1, true) end
           end
         end
-        local tirantNow = workspace.Enemies:FindFirstChild("Tirant Of Skies") or workspace.Enemies:FindFirstChild("TirantOfSkies")
+        local _en4 = workspace:FindFirstChild("Enemies") or workspace:FindFirstChild("Characters")
+        local tirantNow = _en4 and (_en4:FindFirstChild("Tirant Of Skies") or _en4:FindFirstChild("TirantOfSkies"))
         if tirantNow and Attack.Alive(tirantNow) then
           _tirantPhase = "fight_boss"
           Fluent:Notify({Title = "Astral Hub V3", Content = "Tirant Of Skies invocado! Lutando...", Duration = 4})
         end
       elseif _tirantPhase == "fight_boss" then
-        local boss = workspace.Enemies:FindFirstChild("Tirant Of Skies") or workspace.Enemies:FindFirstChild("TirantOfSkies")
+        local _en2 = workspace:FindFirstChild("Enemies") or workspace:FindFirstChild("Characters")
+        local boss = _en2 and (_en2:FindFirstChild("Tirant Of Skies") or _en2:FindFirstChild("TirantOfSkies"))
         if not boss or not Attack.Alive(boss) then
           Fluent:Notify({Title = "Astral Hub V3", Content = "Tirant Of Skies derrotado!", Duration = 5})
           _tirantPhase = "farm"
@@ -4935,40 +4947,40 @@ AutoBuyDracoRace:OnChanged(function(Value)
   _G.AutoBuyDracoRaceV = Value
 end)
 spawn(function()
-  while wait(Sec) do
+  while wait(1) do
     if _G.AutoBuyDracoRaceV then
       pcall(function()
-        local HydraIslandPos = CFrame.new(5814.42724609375, 1208.3267822265625, 884.5785522460938)
+        local HydraWizardPos = CFrame.new(5814.42724609375, 1208.3267822265625, 884.5785522460938)
         local CastlePortalPos = CFrame.new(-5072.08984375, 314.5412902832, -3151.1098632812)
-        local function goToHydra()
-          local ripKilled = workspace:FindFirstChild("Rip_Indra") ~= nil
-          if World3 and ripKilled then
+        if (Root.Position - HydraWizardPos.Position).Magnitude > 200 then
+          local portalModel = World3 and (workspace.Map:FindFirstChild("CastleSeaPortal") or workspace.Map:FindFirstDescendant and workspace.Map:FindFirstDescendant("CastlePortal"))
+          if World3 and portalModel then
             _tp(CastlePortalPos)
-            wait(1)
-            replicated.Remotes.CommF_:InvokeServer("requestEntrance", HydraIslandPos.Position)
+            wait(2)
+            pcall(function() replicated.Remotes.CommF_:InvokeServer("requestEntrance", Vector3.new(5814, 1208, 884)) end)
             wait(3)
           else
-            repeat wait(0.3) _tp(HydraIslandPos) until not _G.AutoBuyDracoRaceV or (Root.Position - HydraIslandPos.Position).Magnitude <= 50
+            repeat wait(0.5) _tp(HydraWizardPos) until not _G.AutoBuyDracoRaceV or (Root.Position - HydraWizardPos.Position).Magnitude <= 200
           end
         end
-        local hasRace = pcall(function()
-          local inv = replicated.Remotes.CommF_:InvokeServer("GetUnlockables")
-          if inv and inv.DragonRace then return end
-          goToHydra()
-          wait(1)
+        wait(0.5)
+        if not _G.AutoBuyDracoRaceV then return end
+        local success = pcall(function()
           local v371 = {[1] = {NPC = "Dragon Wizard", Command = "DragonRace"}}
-          local ok = pcall(function()
-            replicated.Modules.Net:FindFirstChild("RF/InteractDragonQuest"):InvokeServer(unpack(v371))
-          end)
-          if not ok then
-            Fluent:Notify({Title = "Astral Hub V3", Content = "Draco Race nao desbloqueada! Complete os requisitos primeiro.", Duration = 6})
+          local RF = replicated.Modules.Net:FindFirstChild("RF/InteractDragonQuest")
+          if not RF then
+            Fluent:Notify({Title = "Astral Hub V3", Content = "Draco Race nao disponivel neste servidor.", Duration = 6})
             _G.AutoBuyDracoRaceV = false
             return
           end
-          wait(1)
-          Fluent:Notify({Title = "Astral Hub V3", Content = "Draco Race comprada e equipada com sucesso!", Duration = 5})
-          _G.AutoBuyDracoRaceV = false
+          RF:InvokeServer(unpack(v371))
         end)
+        if success then
+          Fluent:Notify({Title = "Astral Hub V3", Content = "Draco Race equipada com sucesso!", Duration = 5})
+        else
+          Fluent:Notify({Title = "Astral Hub V3", Content = "Falha ao equipar Draco Race. Verifique se tem a raca desbloqueada.", Duration = 6})
+        end
+        _G.AutoBuyDracoRaceV = false
       end)
     end
   end
