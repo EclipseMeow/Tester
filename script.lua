@@ -807,7 +807,7 @@ local function _GoToTikiForSubmerged()
   end)
   wait(3)
   if (Root.Position - Vector3.new(10882, -2086, 10034)).Magnitude > 5000 then
-    Fluent:Notify({Title = "Astral Hub V3", Content = "Nao tem Tyrant of Skies Desbloqueado! Entre na ilha submersa manualmente.", Duration = 8})
+    pcall(function() game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Astral Hub V3", Text = "Nao tem Tyrant of Skies Desbloqueado! Entre na ilha submersa manualmente.", Duration = 5}) end)
     _SubmergedReady = false
   else
     _SubmergedReady = true
@@ -1562,7 +1562,7 @@ spawn(function()
       end
       local lv = plr.Data.Level.Value
       if lv < 2500 then
-        Fluent:Notify({Title = "Astral Hub V3", Content = "Precisa de nivel 2500+ para Auto Tirant!", Duration = 4})
+        pcall(function() game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Astral Hub V3", Text = "Precisa de nivel 2500+ para Auto Tirant!", Duration = 5}) end)
         _G.AutoTirantBoss = false
         return
       end
@@ -1576,7 +1576,7 @@ spawn(function()
       if _tirantPhase == "farm" then
         if _tirantKillCount >= 400 then
           _tirantPhase = "break_vases"
-          Fluent:Notify({Title = "Astral Hub V3", Content = "400 NPCs farmados! Indo quebrar os vasos...", Duration = 4})
+          pcall(function() game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Astral Hub V3", Text = "400 NPCs farmados! Indo quebrar os vasos...", Duration = 5}) end)
           return
         end
         local foundNPC = false
@@ -1625,13 +1625,13 @@ spawn(function()
         local tirantNow = _en4 and (_en4:FindFirstChild("Tirant Of Skies") or _en4:FindFirstChild("TirantOfSkies"))
         if tirantNow and Attack.Alive(tirantNow) then
           _tirantPhase = "fight_boss"
-          Fluent:Notify({Title = "Astral Hub V3", Content = "Tirant Of Skies invocado! Lutando...", Duration = 4})
+          pcall(function() game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Astral Hub V3", Text = "Tirant Of Skies invocado! Lutando...", Duration = 5}) end)
         end
       elseif _tirantPhase == "fight_boss" then
         local _en2 = workspace:FindFirstChild("Enemies") or workspace:FindFirstChild("Characters")
         local boss = _en2 and (_en2:FindFirstChild("Tirant Of Skies") or _en2:FindFirstChild("TirantOfSkies"))
         if not boss or not Attack.Alive(boss) then
-          Fluent:Notify({Title = "Astral Hub V3", Content = "Tirant Of Skies derrotado!", Duration = 5})
+          pcall(function() game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Astral Hub V3", Text = "Tirant Of Skies derrotado!", Duration = 5}) end)
           _tirantPhase = "farm"
           _tirantKillCount = 0
           return
@@ -2483,7 +2483,7 @@ Tabs.Discord:AddSection("Astral Hub Remake")
 Tabs.Discord:AddParagraph({Title = "Discord Oficial", Content = "Astral Hub Remake | discord.gg/f4K5sDwKkn"})
 Tabs.Discord:AddButton({Title = "Copiar Link do Discord", Description = "Clica para copiar o link", Callback = function()
   setclipboard("https://discord.gg/f4K5sDwKkn")
-  Fluent:Notify({Title = "Astral Hub V3", Content = "Link copiado! discord.gg/f4K5sDwKkn", Duration = 5})
+  pcall(function() game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Astral Hub V3", Text = "Link copiado! discord.gg/f4K5sDwKkn", Duration = 5}) end)
 end})
 Tabs.Discord:AddParagraph({Title = "ID do Servidor", Content = "92778989024364"})
 Tabs.Discord:AddParagraph({Title = "Astral Hub V3", Content = "Script desenvolvido pelo Remake Devs Team. Acesse nosso Discord para atualizacoes, suporte e novidades!"})
@@ -2492,7 +2492,7 @@ Tabs.Discord:AddSection("Astral Hub Remake")
 Tabs.Discord:AddParagraph({Title = "Discord Oficial", Content = "Astral Hub Remake | discord.gg/f4K5sDwKkn"})
 Tabs.Discord:AddButton({Title = "Copiar Link do Discord", Description = "Clica para copiar o link", Callback = function()
   setclipboard("https://discord.gg/f4K5sDwKkn")
-  Fluent:Notify({Title = "Astral Hub V3", Content = "Link copiado! discord.gg/f4K5sDwKkn", Duration = 5})
+  pcall(function() game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Astral Hub V3", Text = "Link copiado! discord.gg/f4K5sDwKkn", Duration = 5}) end)
 end})
 Tabs.Discord:AddParagraph({Title = "ID do Servidor", Content = "92778989024364"})
 Tabs.Discord:AddParagraph({Title = "Astral Hub V3", Content = "Script desenvolvido pelo Remake Devs Team. Acesse nosso Discord para atualizacoes, suporte e novidades!"})
@@ -4864,18 +4864,18 @@ spawn(function()
             local carryCF = LanternCarryPositions[i]
             repeat wait(0.2) _tp(pickupCF) until not _G.Relic123 or (Root.Position - pickupCF.Position).Magnitude <= 25
             wait(0.5)
-            Fluent:Notify({Title = "Astral Hub V3", Content = "Lanterna " .. i .. "/3 coletada! Levando ao vulcao...", Duration = 4})
+            pcall(function() game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Astral Hub V3", Text = "Lanterna ", Duration = 5}) end)
             repeat wait(0.2) _tp(carryCF) until not _G.Relic123 or (Root.Position - carryCF.Position).Magnitude <= 25
             wait(2.5)
             if i == 3 then
-              Fluent:Notify({Title = "Astral Hub V3", Content = "Todas as 3 lanternas coletadas! Passando pelo portal branco...", Duration = 5})
+              pcall(function() game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Astral Hub V3", Text = "Todas as 3 lanternas coletadas! Passando pelo portal branco...", Duration = 5}) end)
               repeat wait(0.2) _tp(VolcanoTopPos) until not _G.Relic123 or (Root.Position - VolcanoTopPos.Position).Magnitude <= 50
               wait(0.5)
               repeat wait(0.2) _tp(WhitePortalPos) until not _G.Relic123 or (Root.Position - WhitePortalPos.Position).Magnitude <= 30
               wait(1)
               pcall(function() replicated.Remotes.CommF_:InvokeServer("requestEntrance", WhitePortalPos.Position) end)
               _G.Relic123 = false
-              Fluent:Notify({Title = "Astral Hub V3", Content = "Draco Trial concluida!", Duration = 5})
+              pcall(function() game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Astral Hub V3", Text = "Draco Trial concluida!", Duration = 5}) end)
             end
           end
         else
@@ -4969,16 +4969,16 @@ spawn(function()
           local v371 = {[1] = {NPC = "Dragon Wizard", Command = "DragonRace"}}
           local RF = replicated.Modules.Net:FindFirstChild("RF/InteractDragonQuest")
           if not RF then
-            Fluent:Notify({Title = "Astral Hub V3", Content = "Draco Race nao disponivel neste servidor.", Duration = 6})
+            pcall(function() game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Astral Hub V3", Text = "Draco Race nao disponivel neste servidor.", Duration = 5}) end)
             _G.AutoBuyDracoRaceV = false
             return
           end
           RF:InvokeServer(unpack(v371))
         end)
         if success then
-          Fluent:Notify({Title = "Astral Hub V3", Content = "Draco Race equipada com sucesso!", Duration = 5})
+          pcall(function() game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Astral Hub V3", Text = "Draco Race equipada com sucesso!", Duration = 5}) end)
         else
-          Fluent:Notify({Title = "Astral Hub V3", Content = "Falha ao equipar Draco Race. Verifique se tem a raca desbloqueada.", Duration = 6})
+          pcall(function() game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Astral Hub V3", Text = "Falha ao equipar Draco Race. Verifique se tem a raca desbloqueada.", Duration = 5}) end)
         end
         _G.AutoBuyDracoRaceV = false
       end)
@@ -7484,7 +7484,7 @@ spawn(function()
         end
         local trialTP = workspace.Map.PrehistoricIsland:FindFirstChild("TrialTeleport")
         if trialTP and trialTP:FindFirstChild("TouchInterest") then
-          Fluent:Notify({Title = "Astral Hub V3", Content = "Fully Volcanic Completed!", Duration = 6})
+          pcall(function() game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Astral Hub V3", Text = "Fully Volcanic Completed!", Duration = 5}) end)
           local trexHead = workspace.Map.PrehistoricIsland:FindFirstChild("TRex")
           if trexHead then _tp(trexHead:GetPrimaryPartCFrame() * CFrame.new(0, 15, 0)) end
           if _G.AutoCollectEggPrehis then
