@@ -1143,8 +1143,7 @@ function Library:CreateWindow(Setting)
 			
 			Section.Name = Section_Name .. "_Dot"
 			Section.Parent = PageList
-			Section.Size = UDim2.new(1, -5, 0, 0)
-			Section.AutomaticSize = Enum.AutomaticSize.Y
+			Section.Size = UDim2.new(1, -5, 0, 35)
 			Section.BackgroundColor3 = Color3.fromRGB(5, 5, 5)
 			Section.BackgroundTransparency = 0
 			Section.ClipsDescendants = false
@@ -1289,7 +1288,9 @@ function Library:CreateWindow(Setting)
 
 			SectionList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
 				SizeSectionY = SectionList.AbsoluteContentSize.Y + 35
-				if sectionIsVisible then
+				if not Toggleable then
+					Section.Size = UDim2.new(1, -5, 0, SizeSectionY)
+				elseif sectionIsVisible then
 					Section.Size = UDim2.new(1, -5, 0, SizeSectionY)
 				end
 			end)
@@ -3516,9 +3517,6 @@ end
 			return sectionFunction
 		end
 
-        local pagefunc_ext = {}
-        setmetatable(pagefunc_ext, {__index = pagefunc})
-
         local _curSec = nil
         local function ensureSec()
             if not _curSec then
@@ -3527,19 +3525,22 @@ end
             return _curSec
         end
 
+        local pagefunc = {}
+
         function pagefunc:AddSection(name)
-            if type(name) == "table" then name = name[1] end
-            _curSec = pageFunction:AddSection(tostring(name or ""))
+            if type(name) == "table" then name = name[1] or "" end
+            name = tostring(name or "")
+            _curSec = pageFunction:AddSection(name)
             return _curSec
         end
 
         function pagefunc:AddToggle(setting)
             local sec = ensureSec()
-            local id = tostring(setting.Name or setting.Title or "t")
+            local id = tostring(setting.Name or setting.Title or "toggle")
             return sec:AddToggle(id, {
                 Text     = setting.Name or setting.Title or "",
                 Desc     = setting.Description or setting.Desc,
-                Default  = setting.Default or setting.Value,
+                Default  = setting.Default or setting.Value or false,
                 Callback = setting.Callback,
             })
         end
@@ -3580,7 +3581,7 @@ end
 
         function pagefunc:AddDropdown(setting)
             local sec = ensureSec()
-            local id = tostring(setting.Name or setting.Title or "dd")
+            local id = tostring(setting.Name or setting.Title or "dropdown")
             local dd = sec:AddDropdown(id, {
                 Text     = setting.Name or setting.Title or "",
                 Values   = setting.Options or setting.Values or setting.List or {},
@@ -3600,9 +3601,12 @@ end
         end
 
         function pagefunc:AddParagraph(setting)
+            -- Does NOT reset _curSec - creates isolated section for display only
+            local prevSec = _curSec
             local sec = pageFunction:AddSection(setting.Title or "")
             local lbl = nil
             pcall(function() lbl = sec:AddLabel(setting.Desc or "") end)
+            _curSec = prevSec -- Restore _curSec so next AddToggle/etc goes to right section
             local obj = {}
             function obj:SetDesc(text)
                 pcall(function()
@@ -3623,6 +3627,7 @@ end
         end
 
         function pagefunc:AddDiscordInvite(setting)
+            local prevSec = _curSec
             local sec = pageFunction:AddSection(setting.Name or "Discord")
             pcall(function()
                 sec:AddButton({
@@ -3632,6 +3637,7 @@ end
                     end,
                 })
             end)
+            _curSec = prevSec
         end
 
         return pagefunc
