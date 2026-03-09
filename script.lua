@@ -5792,42 +5792,88 @@ end;
 function InstantTp(value)
 	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = value;
 end;
+-- Monta o player no barco e garante que a camera siga corretamente
+local function MountPlayerToBoat(boat)
+	local plr  = game.Players.LocalPlayer;
+	local char = plr.Character;
+	if not char then return false; end;
+	local hrp  = char:FindFirstChild("HumanoidRootPart");
+	local hum  = char:FindFirstChildOfClass("Humanoid");
+	local seat = boat:FindFirstChildWhichIsA("VehicleSeat");
+	if not hrp or not hum or not seat then return false; end;
+	if hum.Sit then return true; end;  -- ja esta sentado
+	-- Posiciona o HRP em cima do assento e espera o Roblox sentar automaticamente
+	hrp.CFrame = seat.CFrame * CFrame.new(0, 1.5, 0);
+	local t = 0;
+	repeat task.wait(0.1); t = t + 0.1;
+	until hum.Sit or t > 3;
+	return hum.Sit;
+end;
+
 function TweenBoat(pos)
 	local TweenService = game:GetService("TweenService");
-	local Boat = workspace.Boats[_G.Settings.SeaEvent["Selected Boat"]];
-	if not Boat or (not Boat:FindFirstChild("VehicleSeat")) then
-		warn("Boat atau VehicleSeat tidak ditemukan!");
-		return {
-			Stop = function()
-			end
-		};
+	local RunService   = game:GetService("RunService");
+	local boatName = _G.Settings.SeaEvent["Selected Boat"] or "Guardian";
+	local Boat = workspace.Boats:FindFirstChild(boatName);
+	if not Boat then
+		-- Tenta encontrar pelo owner
+		for _, b in pairs(workspace.Boats:GetChildren()) do
+			if b.Name == boatName then Boat = b; break; end;
+		end;
 	end;
+	if not Boat or not Boat:FindFirstChildWhichIsA("VehicleSeat") then
+		return { Stop = function() end };
+	end;
+	local seat = Boat:FindFirstChildWhichIsA("VehicleSeat");
 	local targetCFrame = pos;
 	if typeof(pos) == "Instance" and pos:IsA("BasePart") then
 		targetCFrame = pos.CFrame;
 	elseif typeof(pos) ~= "CFrame" then
-		warn("Argumen 'pos' harus berupa CFrame atau BasePart!");
-		return {
-			Stop = function()
-			end
-		};
+		return { Stop = function() end };
 	end;
-	local startPosition = Boat.VehicleSeat.Position;
-	local endPosition = targetCFrame.Position;
-	local distance = (startPosition - endPosition).Magnitude;
-	local tween = nil;
-	local duration = distance / (_G.Settings.SeaEvent["Boat Tween Speed"] or 100);
-	local info = TweenInfo.new(duration, Enum.EasingStyle.Linear);
-	tween = TweenService:Create(Boat.VehicleSeat, info, {
-		CFrame = targetCFrame
-	});
-	if distance > 25 then
-		tween:Play();
-	else
-		warn("Jarak terlalu dekat, tween dibatalkan.");
+	local startPos = seat.Position;
+	local endPos   = targetCFrame.Position;
+	local distance = (startPos - endPos).Magnitude;
+	if distance <= 25 then
+		return { Stop = function() end };
 	end;
+	-- Garante que o player esta sentado ANTES do tween comecar
+	pcall(function() MountPlayerToBoat(Boat); end);
+	local speed    = _G.Settings.SeaEvent["Boat Tween Speed"] or 100;
+	local duration = distance / speed;
+	local info  = TweenInfo.new(duration, Enum.EasingStyle.Linear);
+	local tween = TweenService:Create(seat, info, { CFrame = targetCFrame });
+	local stopped = false;
+	-- Loop para sincronizar a posicao do player com o assento durante o tween
+	-- isso garante que a camera NUNCA teletransporta
+	local plr  = game.Players.LocalPlayer;
+	local syncConn;
+	syncConn = RunService.Heartbeat:Connect(function()
+		if stopped then
+			if syncConn then syncConn:Disconnect(); end;
+			return;
+		end;
+		pcall(function()
+			local char = plr.Character;
+			if not char then return; end;
+			local hrp  = char:FindFirstChild("HumanoidRootPart");
+			local hum  = char:FindFirstChildOfClass("Humanoid");
+			if not hrp or not hum then return; end;
+			-- Se o player caiu fora do barco, remonta
+			if not hum.Sit then
+				hrp.CFrame = seat.CFrame * CFrame.new(0, 1.5, 0);
+			end;
+		end);
+	end);
+	tween:Play();
+	tween.Completed:Connect(function()
+		stopped = true;
+		if syncConn then syncConn:Disconnect(); end;
+	end);
 	local StopTweenBoat = {};
 	function StopTweenBoat:Stop()
+		stopped = true;
+		if syncConn then syncConn:Disconnect(); end;
 		if tween and tween.PlaybackState == Enum.PlaybackState.Playing then
 			tween:Cancel();
 		end;
@@ -6555,29 +6601,36 @@ spawn(function()
 			pcall(function()
 				CheckQuest();
 				local plr = game:GetService("Players").LocalPlayer;
-				-- Submarine Worker: nivel 2600+ - vai ate o NPC na Tiki e faz dialogo para entrar
-				if LevelQuest and NameQuest and string.find(tostring(NameQuest), "Submerged") then
+				-- SUBMERGED ISLAND: nivel 2600+ - detecta automaticamente e usa Submarine Worker
+				local playerLevel = pcall(function() return plr.Data.Level.Value; end) and plr.Data.Level.Value or 0;
+				local isSubmergedQuest = LevelQuest and NameQuest and string.find(tostring(NameQuest), "Submerged");
+				if isSubmergedQuest or playerLevel >= 2600 then
 					local hrp = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart");
-					-- Apenas executa se estiver fora da ilha submersa (Y > -100) e sem cooldown ativo
-					if hrp and hrp.Position.Y > -100 and not _G._subEntering then
+					-- So age se estiver FORA da ilha submersa (Y > -500) e sem cooldown ativo
+					if hrp and hrp.Position.Y > -500 and not _G._subEntering then
 						_G._subEntering = true;
-						-- Vai ate o Submarine Worker na Tiki Outpost
+						-- Posicao exata do Submarine Worker na Tiki Outpost (Mar 3)
 						local SubWorkerCF = CFrame.new(10878, 22, 10145);
 						TweenPlayer(SubWorkerCF);
 						local t = 0;
-						repeat task.wait(0.2); t=t+0.2;
-						until (hrp.Position - SubWorkerCF.Position).Magnitude < 20 or t > 15;
+						repeat task.wait(0.2); t = t + 0.2;
+						until (hrp.Position - SubWorkerCF.Position).Magnitude < 20 or t > 18;
 						task.wait(0.8);
-						-- Faz o dialogo com o NPC para entrar na ilha submersa
+						-- Faz o dialogo com o NPC (funcao oficial do jogo)
 						pcall(function()
 							game:GetService("ReplicatedStorage").Modules.Net["RF/SubmarineWorkerSpeak"]:InvokeServer("TravelToSubmergedIsland");
 						end);
-						-- Aguarda o teleporte completar (player vai para Y < -100)
+						-- Aguarda teleporte para Y < -500 (ilha submersa)
 						t = 0;
-						repeat task.wait(0.3); t=t+0.3;
-						until (hrp.Position.Y < -100) or t > 15;
-						task.wait(1);
+						repeat task.wait(0.3); t = t + 0.3;
+						until hrp.Position.Y < -500 or t > 20;
+						task.wait(1.5);
 						_G._subEntering = false;
+						if hrp.Position.Y > -500 then
+							-- Tentativa falhou, reinicia cooldown menor
+							task.delay(5, function() _G._subEntering = false; end);
+							return;
+						end;
 					end;
 				end;
 				-- Abandona quest errada
@@ -9217,6 +9270,93 @@ ResetSettingsButton = SettingsTab:AddButton({
 		ShowResetConfirm();
 	end
 });
+-- Velocidade e Pulo customizados
+SettingsTab:AddSection(" Speed & Jump Control");
+SettingsTab:AddToggle({
+	Title = "Custom Walk Speed",
+	Desc = "Ativa controle manual de velocidade do player",
+	Value = _G.Settings.Setting["Custom Speed Enabled"] or false,
+	Callback = function(state)
+		_G.Settings.Setting["Custom Speed Enabled"] = state;
+		if not state then
+			pcall(function()
+				local hum = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid");
+				if hum then hum.WalkSpeed = 16; end;
+			end);
+		end;
+		(getgenv()).SaveSetting();
+	end
+});
+SettingsTab:AddSlider({
+	Title = "Walk Speed %",
+	Desc = "100% = velocidade normal (16). 500% = 80. Maximo: 1000%",
+	Min = 100,
+	Max = 1000,
+	Default = _G.Settings.Setting["Custom Speed Pct"] or 100,
+	Callback = function(value)
+		_G.Settings.Setting["Custom Speed Pct"] = value;
+		if _G.Settings.Setting["Custom Speed Enabled"] then
+			pcall(function()
+				local hum = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid");
+				if hum then hum.WalkSpeed = math.floor(16 * (value / 100)); end;
+			end);
+		end;
+		(getgenv()).SaveSetting();
+	end
+});
+SettingsTab:AddToggle({
+	Title = "Custom Jump Power",
+	Desc = "Ativa controle manual de altura de pulo do player",
+	Value = _G.Settings.Setting["Custom Jump Enabled"] or false,
+	Callback = function(state)
+		_G.Settings.Setting["Custom Jump Enabled"] = state;
+		if not state then
+			pcall(function()
+				local hum = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid");
+				if hum then hum.JumpPower = 50; end;
+			end);
+		end;
+		(getgenv()).SaveSetting();
+	end
+});
+SettingsTab:AddSlider({
+	Title = "Jump Power %",
+	Desc = "100% = pulo normal (50). 500% = 250. Maximo: 1000%",
+	Min = 100,
+	Max = 1000,
+	Default = _G.Settings.Setting["Custom Jump Pct"] or 100,
+	Callback = function(value)
+		_G.Settings.Setting["Custom Jump Pct"] = value;
+		if _G.Settings.Setting["Custom Jump Enabled"] then
+			pcall(function()
+				local hum = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid");
+				if hum then hum.JumpPower = math.floor(50 * (value / 100)); end;
+			end);
+		end;
+		(getgenv()).SaveSetting();
+	end
+});
+-- Loop que aplica speed/jump continuamente
+spawn(function()
+	while wait(0.5) do
+		pcall(function()
+			local char = game.Players.LocalPlayer.Character;
+			if not char then return; end;
+			local hum = char:FindFirstChildOfClass("Humanoid");
+			if not hum then return; end;
+			if _G.Settings.Setting["Custom Speed Enabled"] then
+				local pct = _G.Settings.Setting["Custom Speed Pct"] or 100;
+				local target = math.floor(16 * (pct / 100));
+				if hum.WalkSpeed < target then hum.WalkSpeed = target; end;
+			end;
+			if _G.Settings.Setting["Custom Jump Enabled"] then
+				local pct = _G.Settings.Setting["Custom Jump Pct"] or 100;
+				hum.JumpPower = math.floor(50 * (pct / 100));
+			end;
+		end);
+	end;
+end);
+
 local Marines = function()
 	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("SetTeam", "Marines");
 end;
@@ -12509,87 +12649,7 @@ ShopTab:AddToggle({
 	end
 });
 
-FightingStyleShopSection = ShopTab:AddSection("Fighting Style");
-BuyBlackLegButton = ShopTab:AddButton({
-	Title = "Buy Black Leg",
-	Desc = "$150,000",
-	Callback = function()
-		(game:GetService("ReplicatedStorage")).Remotes.CommF_:InvokeServer("BuyBlackLeg");
-	end
-});
-BuyElectroButton = ShopTab:AddButton({
-	Title = "Buy Electro",
-	Desc = "$550,000",
-	Callback = function()
-		(game:GetService("ReplicatedStorage")).Remotes.CommF_:InvokeServer("BuyElectro");
-	end
-});
-BuyFishmanKarateButton = ShopTab:AddButton({
-	Title = "Buy Fishman Karate",
-	Desc = "$750,000",
-	Callback = function()
-		(game:GetService("ReplicatedStorage")).Remotes.CommF_:InvokeServer("BuyFishmanKarate");
-	end
-});
-BuyDragonClawButton = ShopTab:AddButton({
-	Title = "Buy Dragon Claw",
-	Desc = "B$1,500",
-	Callback = function()
-		(game:GetService("ReplicatedStorage")).Remotes.CommF_:InvokeServer("BlackbeardReward", "DragonClaw", "1");
-		(game:GetService("ReplicatedStorage")).Remotes.CommF_:InvokeServer("BlackbeardReward", "DragonClaw", "2");
-	end
-});
-BuySuperhumanButton = ShopTab:AddButton({
-	Title = "Buy Superhuman",
-	Desc = "$3,000,000",
-	Callback = function()
-		(game:GetService("ReplicatedStorage")).Remotes.CommF_:InvokeServer("BuySuperhuman");
-	end
-});
-BuyDeathStepButton = ShopTab:AddButton({
-	Title = "Buy Death Step",
-	Desc = "B$5,000 $5,000,000",
-	Callback = function()
-		(game:GetService("ReplicatedStorage")).Remotes.CommF_:InvokeServer("BuyDeathStep");
-	end
-});
-BuySharkmanKarateButton = ShopTab:AddButton({
-	Title = "Buy Sharkman Karate",
-	Desc = "B$5,000 $2,500,000",
-	Callback = function()
-		(game:GetService("ReplicatedStorage")).Remotes.CommF_:InvokeServer("BuySharkmanKarate", true);
-		(game:GetService("ReplicatedStorage")).Remotes.CommF_:InvokeServer("BuySharkmanKarate");
-	end
-});
-BuyElectricClawButton = ShopTab:AddButton({
-	Title = "Buy Electric Claw",
-	Desc = "B$5,000 $3,000,000",
-	Callback = function()
-		(game:GetService("ReplicatedStorage")).Remotes.CommF_:InvokeServer("BuyElectricClaw");
-	end
-});
-BuyDragonTalonButton = ShopTab:AddButton({
-	Title = "Buy Dragon Talon",
-	Desc = "B$5,000 $3,000,000",
-	Callback = function()
-		(game:GetService("ReplicatedStorage")).Remotes.CommF_:InvokeServer("BuyDragonTalon");
-	end
-});
-BuyGodHumanButton = ShopTab:AddButton({
-	Title = "Buy God Human",
-	Desc = "B$5,000 $5,000,000",
-	Callback = function()
-		(game:GetService("ReplicatedStorage")).Remotes.CommF_:InvokeServer("BuyGodhuman");
-	end
-});
-BuySanguineArtButton = ShopTab:AddButton({
-	Title = "Buy Sanguine Art",
-	Desc = "B$5,000 $5,000,000",
-	Callback = function()
-		(game:GetService("ReplicatedStorage")).Remotes.CommF_:InvokeServer("BuySanguineArt", true);
-		(game:GetService("ReplicatedStorage")).Remotes.CommF_:InvokeServer("BuySanguineArt");
-	end
-});
+-- Instant-buy fighting style section removida (use "Go Buy Fight Style" acima)
 SwordShopSection = ShopTab:AddSection("Sword");
 BuyCutlassButton = ShopTab:AddButton({
 	Title = "Buy Cutlass",
