@@ -5905,7 +5905,7 @@ function TweenBoat(pos)
 	end;
 	-- Garante que o player esta sentado ANTES do tween comecar
 	pcall(function() MountPlayerToBoat(Boat); end);
-	local speed    = _G.Settings.SeaEvent["Boat Tween Speed"] or 100;
+	local speed    = _G.SetSpeedBoat or _G.Settings.SeaEvent["Boat Tween Speed"] or 300;
 	local duration = distance / speed;
 	local info  = TweenInfo.new(duration, Enum.EasingStyle.Linear);
 	local tween = TweenService:Create(seat, info, { CFrame = targetCFrame });
@@ -6091,22 +6091,21 @@ function TweenPlayer(pos)
 	if not e or not e:FindFirstChild("HumanoidRootPart") then return end;
 	local HRP = e.HumanoidRootPart;
 	local hum = e:FindFirstChildOfClass("Humanoid");
-	-- Sempre reseta o estado antes de comecar um novo tween
+	-- Reseta estado imediatamente sem wait (evita travamento/pausa)
 	shouldTween = false;
 	_G.StopTween = false;
-	task.wait();
 	shouldTween = true;
-	-- Sempre desancora antes de tweenear
+	-- Desancora antes de tweenear
 	HRP.Anchored = false;
-	task.wait();
 	local dist = (pos.Position - HRP.Position).Magnitude;
 	if dist < 3 then shouldTween = false; return; end;
-	local speed = dist <= 15 and (getgenv().TweenSpeedNear or 700) or (getgenv().TweenSpeedFar or 350);
-	local info = TweenInfo.new(dist / speed, Enum.EasingStyle.Linear);
+	-- Velocidade unica e consistente (sem variacao near/far que causava inconsistencia)
+	local tweenSpeed = getgenv().TweenSpeedFar or 350;
+	local info = TweenInfo.new(dist / tweenSpeed, Enum.EasingStyle.Linear, Enum.EasingDirection.Out);
 	-- Reposiciona C antes do tween
 	C.CFrame = HRP.CFrame;
 	local tween = TweenService:Create(C, info, {CFrame = pos});
-	if e.Humanoid.Sit == true then
+	if e.Humanoid and e.Humanoid.Sit == true then
 		C.CFrame = CFrame.new(C.Position.X, pos.Y, C.Position.Z);
 	end;
 	tween:Play();
@@ -6117,7 +6116,7 @@ function TweenPlayer(pos)
 				shouldTween = false;
 				break;
 			end;
-			task.wait(0.1);
+			task.wait(0.05);
 		end;
 		-- Garante que HRP nunca fica ancorado e o jogador pode se mover
 		pcall(function()
@@ -6555,8 +6554,8 @@ end;
 
 MainTab:AddDropdown({
 	Title = "Select Farm Mode",
-	Desc = "Level = por quest/level | Bone = Haunted Castle | Cake Prince | Tyrant Of The Skies",
-	Values = {"Level", "Bone", "Cake Prince", "Tyrant Of The Skies"},
+	Desc = "Level = por quest/level | Bone = Haunted Castle | Cake Prince | Tyrant Of The Skies | Nearest = ataca NPCs proximos",
+	Values = {"Level", "Bone", "Cake Prince", "Tyrant Of The Skies", "Nearest"},
 	Value = "Level",
 	Callback = function(v)
 		_G.EclipseFarmMode = v;
@@ -6599,6 +6598,7 @@ AutoLevelFarmToggle = MainTab:AddToggle({
 		_G.EclipseFarm_Bone  = false;
 		_G.EclipseFarm_Cake  = false;
 		_G.EclipseAutoTyrant = false;
+		_G.EclipseFarm_Nearest = false;
 		if v then
 			if _G.EclipseFarmMode == "Level" then
 				_G.EclipseLevel = true;
@@ -6608,12 +6608,52 @@ AutoLevelFarmToggle = MainTab:AddToggle({
 				_G.EclipseFarm_Cake = true;
 			elseif _G.EclipseFarmMode == "Tyrant Of The Skies" then
 				_G.EclipseAutoTyrant = true;
+			elseif _G.EclipseFarmMode == "Nearest" then
+				_G.EclipseFarm_Nearest = true;
 			end;
 		end;
 		StopTween(_G.EclipseStartFarm);
 		(getgenv()).SaveSetting();
 	end
 });
+
+-- LOOP NEAREST FARM (ataca NPCs mais proximos da ilha)
+_G.EclipseFarm_Nearest = false;
+_G.NearestFarmRadius = 150; -- distancia padrao da ilha
+task.spawn(function()
+	while task.wait(0.2) do
+		if not _G.EclipseFarm_Nearest or not _G.EclipseStartFarm then continue; end;
+		pcall(function()
+			local plr = game.Players.LocalPlayer;
+			local char = plr.Character;
+			if not char then return; end;
+			local hrp = char:FindFirstChild("HumanoidRootPart");
+			if not hrp then return; end;
+			local radius = _G.NearestFarmRadius or 150;
+			-- Pega o NPC mais proximo dentro do raio configurado
+			local closest, closestDist = nil, radius;
+			for _, v in pairs(workspace.Enemies:GetChildren()) do
+				if v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 then
+					local d = (v.HumanoidRootPart.Position - hrp.Position).Magnitude;
+					if d < closestDist then
+						closestDist = d;
+						closest = v;
+					end;
+				end;
+			end;
+			if not closest then return; end;
+			EquipWeapon(_G.SelectWeapon);
+			TweenPlayer(closest.HumanoidRootPart.CFrame * CFrame.new(0, _G.MobHeight or 15, 0));
+			task.wait(0.05);
+			getgenv().UseConfiguredSkills(closest.HumanoidRootPart.Position);
+			-- Trava o mob no lugar
+			pcall(function()
+				closest.HumanoidRootPart.CFrame = closest.HumanoidRootPart.CFrame;
+				if closest.Humanoid then closest.Humanoid.WalkSpeed = 0; end;
+			end);
+		end);
+	end;
+end);
 
 -- LOOP 1: LEVEL FARM (Saturn Hub - Quest por nivel)
 spawn(function()
@@ -9544,6 +9584,17 @@ ChooseWeaponDropdown = SettingsTab:AddDropdown({
 		(getgenv()).SaveSetting();
 	end
 });
+-- Slider de distancia de farm de NPCs proximos (Nearest Mode)
+SettingsTab:AddSlider({
+	Title = "Nearest Farm Distance",
+	Desc = "Distancia maxima (em studs) para atacar NPCs proximos. Padrao da ilha = 150",
+	Min = 20,
+	Max = 600,
+	Default = _G.NearestFarmRadius or 150,
+	Callback = function(value)
+		_G.NearestFarmRadius = value;
+	end
+});
 ResetSettingsButton = SettingsTab:AddButton({
 	Title = " Reset Settings",
 	Desc = "Apaga todas as configuracoes salvas (pede confirmacao)",
@@ -9569,17 +9620,17 @@ SettingsTab:AddToggle({
 	end
 });
 SettingsTab:AddSlider({
-	Title = "Walk Speed %",
-	Desc = "100% = velocidade normal (16). 500% = 80. Maximo: 1000%",
-	Min = 100,
-	Max = 1000,
-	Default = _G.Settings.Setting["Custom Speed Pct"] or 100,
+	Title = "Walk Speed",
+	Desc = "Velocidade direta do player. Normal = 16. Maximo = 300",
+	Min = 16,
+	Max = 300,
+	Default = _G.Settings.Setting["Custom Speed Val"] or 16,
 	Callback = function(value)
-		_G.Settings.Setting["Custom Speed Pct"] = value;
+		_G.Settings.Setting["Custom Speed Val"] = value;
 		if _G.Settings.Setting["Custom Speed Enabled"] then
 			pcall(function()
 				local hum = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid");
-				if hum then hum.WalkSpeed = math.floor(16 * (value / 100)); end;
+				if hum then hum.WalkSpeed = value; end;
 			end);
 		end;
 		(getgenv()).SaveSetting();
@@ -9626,8 +9677,7 @@ spawn(function()
 			local hum = char:FindFirstChildOfClass("Humanoid");
 			if not hum then return; end;
 			if _G.Settings.Setting["Custom Speed Enabled"] then
-				local pct = _G.Settings.Setting["Custom Speed Pct"] or 100;
-				local target = math.floor(16 * (pct / 100));
+				local target = _G.Settings.Setting["Custom Speed Val"] or 16;
 				if hum.WalkSpeed < target then hum.WalkSpeed = target; end;
 			end;
 			if _G.Settings.Setting["Custom Jump Enabled"] then
@@ -12662,7 +12712,7 @@ else
 	-- ═══════════════════════════════════════════════
 	DungeonTab:AddSection("Rings");
 	DungeonTab:AddToggle({
-		Title = "Automatically Fuse Rings",
+		Title = "Dungeon Auto Fuse Rings [BETA]",
 		Desc = "Vai até o NPC de anéis no lobby e funde os anéis automaticamente.",
 		Value = getgenv().DungeonConfig.AutoFuse,
 		Callback = function(state)
@@ -12702,7 +12752,7 @@ else
 	--   LOOP: AUTO SPIN RINGS
 	-- ═══════════════════════════════════════════════
 	DungeonTab:AddToggle({
-		Title = "Automatically Spin Rings",
+		Title = "Dungeon Auto Spin Rings [BETA]",
 		Desc = "Gira anéis automaticamente no NPC do lobby.",
 		Value = getgenv().DungeonConfig.AutoSpin,
 		Callback = function(state)
@@ -12744,36 +12794,66 @@ else
 	-- ═══════════════════════════════════════════════
 	DungeonTab:AddSection("Dungeon");
 	DungeonTab:AddToggle({
-		Title = "Automatically Enter Dungeon",
-		Desc = "Vai ao portal da dungeon no lobby e aguarda a partida iniciar (requer 2+ jogadores).",
+		Title = "Auto Enter Dungeon",
+		Desc = "Teleporta para o chao amarelo na entrada da Dungeon e fica tentando iniciar a partida.",
 		Value = getgenv().DungeonConfig.AutoEnter,
 		Callback = function(state)
 			getgenv().DungeonConfig.AutoEnter = state;
 		end
 	});
+	-- CFrame do chao amarelo na entrada da Dungeon (frente do portal)
+	local _DUNGEON_ENTRY_FLOOR_CF = CFrame.new(-2.5, 0.5, -35.5); -- ajustar conforme mapa da Dungeon World
 	task.spawn(function()
 		while true do
-			task.wait(1);
+			task.wait(0.5);
 			if not getgenv().DungeonConfig.AutoEnter then continue; end;
 			pcall(function()
-				-- Só entra se tiver 2+ jogadores no servidor
-				if #game:GetService("Players"):GetPlayers() < 2 then return; end;
 				if _InDungeonMatch() then return; end;
-				local portal = _FindDungeonPortal();
-				if not portal then return; end;
-				TweenPlayer(portal.CFrame * CFrame.new(0, 2, 0));
-				task.wait(0.8);
-				-- Tenta entrar via ProximityPrompt ou invocação
-				for _, pp in pairs(portal:GetDescendants()) do
+				-- Teleporta para o chao amarelo (frente da dungeon)
+				local hrp = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart");
+				if not hrp then return; end;
+				-- Procura o chao amarelo (BasePart amarela perto do portal)
+				local yellowFloor = nil;
+				for _, v in pairs(workspace:GetDescendants()) do
+					if v:IsA("BasePart") then
+						local col = v.Color;
+						-- Amarelo: R > 200, G > 180, B < 80 (aproximado)
+						if col.R > 0.7 and col.G > 0.6 and col.B < 0.3 then
+							local name = v.Name:lower();
+							if name:find("floor") or name:find("enter") or name:find("lobby") or name:find("start") or name:find("ground") then
+								yellowFloor = v;
+								break;
+							end;
+						end;
+					end;
+				end;
+				-- Se achou o chao amarelo, teleporta para ele
+				if yellowFloor then
+					local targetCF = CFrame.new(yellowFloor.Position.X, yellowFloor.Position.Y + 3, yellowFloor.Position.Z);
+					hrp.CFrame = targetCF;
+				else
+					-- Fallback: vai ao portal
+					local portal = _FindDungeonPortal();
+					if portal then
+						hrp.CFrame = portal.CFrame * CFrame.new(0, 3, 5);
+					end;
+				end;
+				task.wait(0.2);
+				-- Tenta iniciar dungeon continuamente
+				for _, pp in pairs(workspace:GetDescendants()) do
 					if pp:IsA("ProximityPrompt") then
-						pcall(function() fireproximityprompt(pp); end);
+						local n = (pp.ActionText or pp.Name):lower();
+						if n:find("enter") or n:find("start") or n:find("join") or n:find("dungeon") or n:find("portal") then
+							pcall(function() fireproximityprompt(pp); end);
+						end;
 					end;
 				end;
 				local rep = game:GetService("ReplicatedStorage");
-				local remote = rep:FindFirstChild("CommF_", true) or rep.Remotes and rep.Remotes:FindFirstChild("CommF_");
+				local remote = rep:FindFirstChild("CommF_", true) or (rep.Remotes and rep.Remotes:FindFirstChild("CommF_"));
 				if remote then
 					pcall(function() remote:InvokeServer("EnterDungeon"); end);
 					pcall(function() remote:InvokeServer("JoinDungeon"); end);
+					pcall(function() remote:InvokeServer("StartDungeon"); end);
 				end;
 			end);
 		end;
@@ -12783,8 +12863,8 @@ else
 	--   LOOP: AUTO COMPLETE DUNGEON
 	-- ═══════════════════════════════════════════════
 	DungeonTab:AddToggle({
-		Title = "Automatically Complete Dungeon",
-		Desc = "Ataca NPCs de cada Floor, destrói shrines do Kitsune (Floor 10) e vazamentos de gás (Floor 15), e avança automaticamente.",
+		Title = "Auto Complete Dungeon",
+		Desc = "Ataca todos os NPCs proximos de cada Floor, destroi Shrines do Kitsune (Floor 10), destroi vazamentos de gas (Floor 15) e avanca automaticamente.",
 		Value = getgenv().DungeonConfig.AutoComplete,
 		Callback = function(state)
 			getgenv().DungeonConfig.AutoComplete = state;
@@ -12792,7 +12872,7 @@ else
 	});
 	task.spawn(function()
 		while true do
-			task.wait(0.3);
+			task.wait(0.15);
 			if not getgenv().DungeonConfig.AutoComplete then continue; end;
 			pcall(function()
 				if not _InDungeonMatch() then return; end;
@@ -12806,54 +12886,77 @@ else
 					end;
 				end;
 
-				-- Floor 10: destruir Kitsune Shrines primeiro
+				-- Floor 10: destruir Kitsune Shrines PRIMEIRO (prioridade maxima)
 				if floorNum == 10 then
 					local shrines = _GetKitsuneShrines();
 					if #shrines > 0 then
 						for _, shrine in pairs(shrines) do
 							if not getgenv().DungeonConfig.AutoComplete then break; end;
 							local pos = shrine:IsA("Model") and shrine:GetPivot().Position or shrine.Position;
+							-- Teleporta para cima do shrine e usa skills
+							local hrp = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart");
+							if hrp then hrp.CFrame = CFrame.new(pos.X, pos.Y + 8, pos.Z); end;
+							task.wait(0.05);
 							_SpamSkillsAt(pos);
-							task.wait(0.2);
+							task.wait(0.1);
 						end;
-						return;
+						return; -- volta ao inicio do loop para recheckar
 					end;
 				end;
 
-				-- Floor 15: destruir vazamentos de gás primeiro
+				-- Floor 15: destruir vazamentos de gas PRIMEIRO (prioridade maxima)
 				if floorNum == 15 then
 					local leaks = _GetGasLeaks();
 					if #leaks > 0 then
 						for _, leak in pairs(leaks) do
 							if not getgenv().DungeonConfig.AutoComplete then break; end;
 							local pos = leak:IsA("Model") and leak:GetPivot().Position or leak.Position;
+							local hrp = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart");
+							if hrp then hrp.CFrame = CFrame.new(pos.X, pos.Y + 8, pos.Z); end;
+							task.wait(0.05);
 							_SpamSkillsAt(pos);
-							task.wait(0.2);
+							task.wait(0.1);
 						end;
 						return;
 					end;
 				end;
 
-				-- Ataca inimigos do floor atual
+				-- Ataca TODOS os inimigos vivos do floor (nao so o primeiro)
 				local enemies = _GetFloorEnemies();
 				if #enemies > 0 then
-					local target = enemies[1];
-					if target and target:FindFirstChild("Humanoid") and target.Humanoid.Health > 0 then
-						_AttackTarget(target);
+					-- Procura o NPC mais proximo
+					local hrp = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart");
+					local nearest, nearestDist = enemies[1], math.huge;
+					if hrp then
+						for _, enemy in pairs(enemies) do
+							if enemy:FindFirstChild("HumanoidRootPart") then
+								local d = (enemy.HumanoidRootPart.Position - hrp.Position).Magnitude;
+								if d < nearestDist then
+									nearestDist = d;
+									nearest = enemy;
+								end;
+							end;
+						end;
+					end;
+					if nearest and nearest:FindFirstChild("Humanoid") and nearest.Humanoid.Health > 0 then
+						-- Trava o inimigo no lugar
+						pcall(function() nearest.Humanoid.WalkSpeed = 0; end);
+						_AttackTarget(nearest);
 					end;
 				else
-					-- Sem inimigos: tenta avançar floor
+					-- Sem inimigos: avanca o floor
 					local rep = game:GetService("ReplicatedStorage");
-					local remote = rep:FindFirstChild("CommF_", true) or rep.Remotes and rep.Remotes:FindFirstChild("CommF_");
+					local remote = rep:FindFirstChild("CommF_", true) or (rep.Remotes and rep.Remotes:FindFirstChild("CommF_"));
 					if remote then
 						pcall(function() remote:InvokeServer("NextFloor"); end);
 						pcall(function() remote:InvokeServer("AdvanceFloor"); end);
+						pcall(function() remote:InvokeServer("CompleteFloor"); end);
 					end;
-					-- Tenta ProximityPrompts de passagem
+					-- Tenta ProximityPrompts de passagem/andar
 					for _, v in pairs(workspace:GetDescendants()) do
 						if v:IsA("ProximityPrompt") then
-							local n = v.ActionText and v.ActionText:lower() or v.Name:lower();
-							if n:find("next") or n:find("advance") or n:find("continue") or n:find("pass") then
+							local n = (v.ActionText or v.Name):lower();
+							if n:find("next") or n:find("advance") or n:find("continue") or n:find("pass") or n:find("floor") then
 								pcall(function() fireproximityprompt(v); end);
 							end;
 						end;
@@ -12868,7 +12971,7 @@ else
 	-- ═══════════════════════════════════════════════
 	DungeonTab:AddSection("Buffs");
 	DungeonTab:AddToggle({
-		Title = "Select Buffs (Auto-choose cards)",
+		Title = "Dungeon Select Buffs [BETA]",
 		Desc = "Ativa a seleção automática de buffs quando aparecer a tela de cartas na dungeon.",
 		Value = getgenv().DungeonConfig.SelectBuffs,
 		Callback = function(state)
@@ -12876,7 +12979,7 @@ else
 		end
 	});
 	DungeonTab:AddDropdown({
-		Title = "Buffs to Select",
+		Title = "Dungeon Buffs to Select [BETA]",
 		Desc = "Escolha quais buffs devem ser selecionados automaticamente (multi-seleção)",
 		Values = _KNOWN_BUFFS,
 		Value = getgenv().DungeonConfig.SelectedBuffs[1] or _KNOWN_BUFFS[1],
@@ -12918,7 +13021,7 @@ else
 	-- ═══════════════════════════════════════════════
 	DungeonTab:AddSection("Post-Dungeon");
 	DungeonTab:AddToggle({
-		Title = "Auto Skip Hub",
+		Title = "Dungeon Auto Skip Hub [BETA]",
 		Desc = "Quando a dungeon terminar, aperta automaticamente para voltar ao lobby.",
 		Value = getgenv().DungeonConfig.AutoSkipHub,
 		Callback = function(state)
@@ -14806,40 +14909,44 @@ ChooseZoneDropdown = SeaEventTab:AddDropdown({
 
 local BoatSpeedSlider = SeaEventTab:AddSlider({
 	Title = "Boat Speed",
-	Desc = "Velocidade customizada do barco (padrao: 300)",
-	Value = {Min = 50, Max = 2000, Default = 300},
+	Desc = "Velocidade do barco (padrao: 300)",
+	Min = 10,
+	Max = 350,
+	Default = 300,
 	Callback = function(v)
 		_G.SetSpeedBoat = v;
+		_G.Settings.SeaEvent["Boat Tween Speed"] = v;
 	end
 });
 
--- Auto Boat Speed aplicada em tempo real
+-- Activate Boat Speed - aplica velocidade no VehicleSeat em tempo real
 SeaEventTab:AddToggle({
 	Title = "Activate Boat Speed",
-	Desc = "Aplica velocidade customizada no barco",
+	Desc = "Aplica velocidade customizada no barco em tempo real",
 	Value = false,
 	Callback = function(v)
 		_G.SpeedBoat = v;
 	end
 });
 task.spawn(function()
-	game:GetService("RunService").RenderStepped:Connect(function()
-		if _G.SpeedBoat then
-			pcall(function()
-				if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
-				   and game.Players.LocalPlayer.Character.Humanoid.Sit then
-					for _, boat in pairs(workspace.Boats:GetChildren()) do
-						local seat = boat:FindFirstChildWhichIsA("VehicleSeat");
-						if seat then
-							seat.MaxSpeed = _G.SetSpeedBoat or 300;
-							seat.Torque = 0.2;
-							seat.TurnSpeed = 5;
-						end;
-					end;
+	while task.wait(0.1) do
+		if not _G.SpeedBoat then continue; end;
+		pcall(function()
+			local char = game.Players.LocalPlayer.Character;
+			if not char then return; end;
+			local hum = char:FindFirstChildOfClass("Humanoid");
+			if not hum or not hum.Sit then return; end;
+			local spd = _G.SetSpeedBoat or 300;
+			for _, boat in pairs(workspace.Boats:GetChildren()) do
+				local seat = boat:FindFirstChildWhichIsA("VehicleSeat");
+				if seat then
+					seat.MaxSpeed = spd;
+					seat.Torque   = 30;
+					seat.TurnSpeed = 10;
 				end;
-			end);
-		end;
-	end);
+			end;
+		end);
+	end;
 end);
 
 -- Auto Sail
@@ -14854,196 +14961,132 @@ local _DANGER_ZONES = {
 	["Lv Infinite"] = CFrame.new(-148073.36, 9.0, 7721.05),
 };
 
--- Tiki Outpost CFrame (loja de barcos no Sea 3)
-local _TIKI_OUTPOST_BOAT_DEALER = CFrame.new(-16927.451, 9.086, 433.864);
+-- ==================================================
+-- SAIL SEA (integrado do A.txt - modo completo)
+-- Navega entre waypoints, para em inimigos, compra barco automaticamente
+-- ==================================================
+_G.SailBoat = false;
+_G.SailBoats = false;
 
--- Sail Sea via Tiki Outpost: vai ate Tiki, compra barco, navega ate o mar selecionado
-SailViaTikiToggle = SeaEventTab:AddToggle({
-	Title = "Sail Sea via Tiki Outpost",
-	Desc = "Vai ate Tiki Outpost via Tween, compra o barco selecionado, monta e navega ate o mar escolhido.",
-	Value = false,
-	Callback = function(state)
-		_G.SailViaTiki = state;
-	end
-});
-task.spawn(function()
-	while task.wait(0.5) do
-		if not _G.SailViaTiki then continue end
-		pcall(function()
-			local plr = game.Players.LocalPlayer;
-			local char = plr.Character;
-			if not char then return end
-			local hrp = char:FindFirstChild("HumanoidRootPart");
-			local hum = char:FindFirstChildOfClass("Humanoid");
-			if not hrp or not hum then return end
-			local selectedBoat = _G.Settings.SeaEvent["Selected Boat"] or "Guardian";
-			local plrName = plr.Name;
-			-- Verifica se ja tem barco do player
-			local boat = nil;
-			for _, b in pairs(workspace.Boats:GetChildren()) do
-				if b.Name == selectedBoat then
-					local own = b:FindFirstChild("OwnerName") or b:FindFirstChild("Owner");
-					if own and own.Value == plrName then boat = b; break end
-				end
-			end
-			-- Se nao tem barco, vai ate Tiki Outpost e compra
-			if not boat then
-				TweenPlayer(_TIKI_OUTPOST_BOAT_DEALER);
-				local tw = 0;
-				repeat task.wait(0.2); tw = tw + 0.2;
-				until (hrp.Position - _TIKI_OUTPOST_BOAT_DEALER.Position).Magnitude < 20 or tw > 15;
-				task.wait(0.3);
-				game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyBoat", selectedBoat);
-				local sw = 0;
-				repeat
-					task.wait(0.3); sw = sw + 0.3;
-					boat = nil;
-					for _, b in pairs(workspace.Boats:GetChildren()) do
-						if b.Name == selectedBoat then
-							local own = b:FindFirstChild("OwnerName") or b:FindFirstChild("Owner");
-							if own and own.Value == plrName then boat = b; break end
-						end
-					end
-				until boat or sw > 8;
-				if not boat then return end
-			end
-			-- Monta no barco se ainda nao estiver sentado
-			if not hum.Sit then
-				local seat = boat:FindFirstChildWhichIsA("VehicleSeat");
-				if seat then
-					hrp.CFrame = seat.CFrame * CFrame.new(0, 1.5, 0);
-					task.wait(0.5);
-					if not hum.Sit then
-						hrp.CFrame = seat.CFrame * CFrame.new(0, 0.3, 0);
-						task.wait(0.5);
-					end
-				end
-				return;
-			end
-			-- Verifica inimigo perto antes de navegar
-			local hasEnemy = CheckShark() or CheckTerrorShark() or CheckFishCrew()
-				or CheckPiranha() or CheckEnemiesBoat() or CheckSeaBeast()
-				or CheckPirateGrandBrigade() or CheckHauntedCrew() or CheckLeviathan();
-			if hasEnemy then return end
-			-- Navega para zona selecionada
-			local zoneCF = _DANGER_ZONES[_G.DangerSc or "Lv 1"] or _DANGER_ZONES["Lv 1"];
-			if (hrp.Position - zoneCF.Position).Magnitude > 500 then
-				TweenBoat(zoneCF);
-			end
-		end)
-	end
-end);
+-- Waypoints de navegacao do Sail Sea (A.txt)
+local _SAIL_WAYPOINT_A = CFrame.new(-37813.6953, -0.3221744, 6105.16895, -0.252362996, 4.13621581E-9, 0.967632651, 2.87320709E-8, 1, 3.21888249E-9, -0.967632651, 2.86144175E-8, -0.252362996);
+local _SAIL_WAYPOINT_B = CFrame.new(-42250.2227, -0.3221744, 9247.07715, -0.45916447, 6.39043236E-8, 0.888351262, -3.36711423E-8, 1, -8.93395651E-8, -0.888351262, -7.09333605E-8, -0.45916447);
 
-AutoSailBoatToggle = SeaEventTab:AddToggle({
-	Title = "Sail Sea - Buy Boat + Navigate",
-	Desc = "Compra barco automaticamente, navega e fica na zona de farm selecionada atacando eventos do mar.",
-	Value = _G.Settings.SeaEvent["Sail Boat"],
-	Callback = function(state)
-		_G.Settings.SeaEvent["Sail Boat"] = state;
-		_G.SailBoats = state;
-		(getgenv()).SaveSetting();
-	end
-});
--- ===== SAIL SEA (metodo Eclipse Hub) =====
--- Funcao interna: verifica se tem barco do player
-local function _CheckMyBoat()
-	local plrName = game.Players.LocalPlayer.Name;
-	local selectedBoat = _G.Settings.SeaEvent["Selected Boat"] or "Guardian";
-	for _, b in pairs(workspace.Boats:GetChildren()) do
-		if b.Name == selectedBoat then
-			local own = b:FindFirstChild("OwnerName") or b:FindFirstChild("Owner");
-			if own and own.Value == plrName then return b; end;
-		end;
-	end;
-	return nil;
-end;
--- Funcao interna: teleporte direto para CFrame (metodo Eclipse Hub)
-local function _TpEclipse(targetCF)
+-- Funcao interna: tween do BARCO para um CFrame
+local function _TweenBoatTo(targetCF)
 	pcall(function()
 		local plr = game.Players.LocalPlayer;
 		local char = plr.Character;
 		if not char then return; end;
-		local hrp = char:FindFirstChild("HumanoidRootPart");
-		if not hrp then return; end;
-		local dist = (targetCF.Position - hrp.Position).Magnitude;
-		local tweenInfo = TweenInfo.new(dist / 300, Enum.EasingStyle.Linear);
-		local tw = TweenService:Create(C, tweenInfo, {CFrame = targetCF});
-		if char.Humanoid.Sit then
-			C.CFrame = CFrame.new(C.Position.X, targetCF.Y, C.Position.Z);
-		end;
-		tw:Play();
-		task.spawn(function()
-			while tw.PlaybackState == Enum.PlaybackState.Playing do
-				if not _G.SailBoats then tw:Cancel(); break; end;
-				task.wait(0.05);
+		local hum = char:FindFirstChildOfClass("Humanoid");
+		if not hum then return; end;
+		local selectedBoat = _G.Settings.SeaEvent["Selected Boat"] or "Guardian";
+		local boat = nil;
+		for _, b in pairs(workspace.Boats:GetChildren()) do
+			if b.Name == selectedBoat then
+				local own = b:FindFirstChild("OwnerName") or b:FindFirstChild("Owner");
+				if own and own.Value == plr.Name then boat = b; break; end;
 			end;
-		end);
+		end;
+		if not boat then return; end;
+		local seat = boat:FindFirstChildWhichIsA("VehicleSeat");
+		if not seat then return; end;
+		local dist = (targetCF.Position - seat.Position).Magnitude;
+		local spd = _G.SetSpeedBoat or _G.Settings.SeaEvent["Boat Tween Speed"] or 300;
+		local tweenInfo = TweenInfo.new(dist / spd, Enum.EasingStyle.Linear);
+		local tw = TweenService:Create(seat, tweenInfo, {CFrame = targetCF});
+		tw:Play();
+		local elapsed = 0;
+		while tw.PlaybackState == Enum.PlaybackState.Playing do
+			elapsed = elapsed + 0.05;
+			if not _G.SailBoat or elapsed > (dist / spd) + 5 then tw:Cancel(); break; end;
+			task.wait(0.05);
+		end;
 	end);
 end;
--- Loop principal Sail Sea (metodo Eclipse Hub - direto e sem bug de re-ativar)
+
+-- Funcao interna: verifica inimigos do Sea Event
+local function _hasSeaEnemy()
+	return (CheckShark() and _G.Settings.SeaEvent["Auto Farm Shark"])
+		or (CheckTerrorShark() and _G.Settings.SeaEvent["Auto Farm Terrorshark"])
+		or (CheckFishCrew() and _G.Settings.SeaEvent["Auto Farm Fish Crew Member"])
+		or (CheckPiranha() and _G.Settings.SeaEvent["Auto Farm Piranha"])
+		or (CheckSeaBeast() and _G.Settings.SeaEvent["Auto Farm Seabeasts"])
+		or (CheckEnemiesBoat() and _G.Settings.SeaEvent["Auto Farm Pirate Brigade"])
+		or (CheckPirateGrandBrigade() and _G.Settings.SeaEvent["Auto Farm Pirate Grand Brigade"])
+		or (CheckHauntedCrew() and _G.Settings.SeaEvent["Auto Farm Ghost Ship"])
+		or (CheckLeviathan() and _G.Settings.SeaEvent["Auto Farm Seabeasts"]);
+end;
+
+SailSeaToggle = SeaEventTab:AddToggle({
+	Title = "Sail Sea",
+	Desc = "Compra barco, monta e navega automaticamente entre zonas atacando eventos do mar. Para ao encontrar inimigos.",
+	Value = false,
+	Callback = function(state)
+		_G.SailBoat = state;
+		_G.SailBoats = state;
+		_G.Settings.SeaEvent["Sail Boat"] = state;
+		(getgenv()).SaveSetting();
+	end
+});
+
+-- Loop principal Sail Sea (baseado no A.txt + framework do hub)
 task.spawn(function()
-	while task.wait() do
-		if _G.SailBoats then
-			pcall(function()
-				local plr = game.Players.LocalPlayer;
-				local char = plr.Character;
-				if not char then return; end;
-				local hrp = char:FindFirstChild("HumanoidRootPart");
-				local hum = char:FindFirstChildOfClass("Humanoid");
-				if not hrp or not hum then return; end;
-				local buyBoatCF = _BOAT_DEALER_CF;
-				-- Detecta inimigos ativos
-				local function _hasEnemy()
-					return (CheckShark() and _G.Settings.SeaEvent["Auto Shark"])
-						or (CheckTerrorShark() and _G.Settings.SeaEvent["Auto Terror Shark"])
-						or (CheckFishCrew() and _G.Settings.SeaEvent["Auto Ship"])
-						or (CheckPiranha() and _G.Settings.SeaEvent["Auto Piranha"])
-						or (CheckSeaBeast() and _G.Settings.SeaEvent["Auto Sea Beast"])
-						or (CheckEnemiesBoat() and _G.Settings.SeaEvent["Auto Fish Boat"])
-						or (CheckPirateGrandBrigade() and _G.Settings.SeaEvent["Auto Pirate Grand Brigade"])
-						or (CheckHauntedCrew() and _G.Settings.SeaEvent["Auto Haunted Ship"])
-						or (CheckLeviathan() and _G.Settings.SeaEvent["Auto Leviathan"]);
+	while task.wait(0.3) do
+		if not _G.SailBoat then continue; end;
+		pcall(function()
+			local plr = game.Players.LocalPlayer;
+			local char = plr.Character;
+			if not char then return; end;
+			local hrp = char:FindFirstChild("HumanoidRootPart");
+			local hum = char:FindFirstChildOfClass("Humanoid");
+			if not hrp or not hum then return; end;
+			local selectedBoat = _G.Settings.SeaEvent["Selected Boat"] or "Guardian";
+			-- Verifica se ja tem barco do player
+			local myBoat = nil;
+			for _, b in pairs(workspace.Boats:GetChildren()) do
+				if b.Name == selectedBoat then
+					local own = b:FindFirstChild("OwnerName") or b:FindFirstChild("Owner");
+					if own and own.Value == plr.Name then myBoat = b; break; end;
 				end;
-				-- Sem barco: vai comprar
-				local myBoat = _CheckMyBoat();
-				if not myBoat and not _hasEnemy() then
-					_TpEclipse(buyBoatCF);
-					if (buyBoatCF.Position - hrp.Position).Magnitude <= 15 then
-						game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyBoat", _G.Settings.SeaEvent["Selected Boat"] or "Guardian");
-					end;
-					return;
+			end;
+			-- Sem barco: vai ate o dealer e compra
+			if not myBoat then
+				TweenPlayer(_BOAT_DEALER_CF);
+				local tw = 0;
+				repeat task.wait(0.2); tw = tw + 0.2;
+				until (hrp.Position - _BOAT_DEALER_CF.Position).Magnitude < 15 or tw > 15 or not _G.SailBoat;
+				if not _G.SailBoat then return; end;
+				game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyBoat", selectedBoat);
+				task.wait(1);
+				return;
+			end;
+			-- Tem barco mas nao esta sentado: senta
+			if myBoat and not hum.Sit then
+				local seat = myBoat:FindFirstChildWhichIsA("VehicleSeat");
+				if seat then
+					hrp.CFrame = seat.CFrame * CFrame.new(0, 1.5, 0);
+					task.wait(0.5);
 				end;
-				-- Tem barco mas nao esta sentado
-				if myBoat and not hum.Sit then
-					local seat = myBoat:FindFirstChildWhichIsA("VehicleSeat");
-					if seat then
-						hrp.CFrame = seat.CFrame * CFrame.new(0, 1, 0);
-					end;
-					return;
-				end;
-				-- Sentado no barco: navega para a zona selecionada
-				if myBoat and hum.Sit then
-					if _hasEnemy() then return; end;
-					local zoneCF = _DANGER_ZONES[_G.DangerSc or "Lv 1"] or _DANGER_ZONES["Lv 1"];
-					-- Desativa colisao do barco para navegar sem travar em ilhas
-					for _, d in pairs(workspace.Boats:GetDescendants()) do
-						if d:IsA("BasePart") then d.CanCollide = false; end;
-					end;
-					repeat task.wait()
-						if _hasEnemy() then break; end;
-						-- Se tem inimigo de barco, sobe para desviar
-						if CheckEnemiesBoat() or CheckPirateGrandBrigade() or CheckTerrorShark() then
-							_TpEclipse(zoneCF * CFrame.new(0, 150, 0));
-						else
-							_TpEclipse(zoneCF);
-						end;
-					until not _G.SailBoats
-						or _hasEnemy()
-						or (hum and not hum.Sit);
-					if hum and not hum.Sit then hum.Sit = false; end;
-				end;
-			end);
-		end;
+				return;
+			end;
+			-- Sentado: inimigo presente -> para e deixa o farm de inimigos agir
+			if _hasSeaEnemy() then return; end;
+			-- Sem inimigos: navega entre os waypoints
+			-- Sem colisao nos barcos para passar livre
+			for _, d in pairs(workspace.Boats:GetDescendants()) do
+				if d:IsA("BasePart") then d.CanCollide = false; end;
+			end;
+			local zoneCF = _DANGER_ZONES[_G.DangerSc or "Lv 1"] or _DANGER_ZONES["Lv 1"];
+			-- Alterna entre waypoints A e B (A.txt) ou vai para zona selecionada
+			if not _G.SailCurrentWP or _G.SailCurrentWP == "B" then
+				_G.SailCurrentWP = "A";
+				_TweenBoatTo(_SAIL_WAYPOINT_A);
+			else
+				_G.SailCurrentWP = "B";
+				_TweenBoatTo(_SAIL_WAYPOINT_B);
+			end;
+		end);
 	end;
 end);
 -- Bring Boat: Teleporta o barco ate o jogador (evento do mar)
