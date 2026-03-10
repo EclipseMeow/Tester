@@ -3839,8 +3839,8 @@ FarmingHopTab:AddToggle({
 		SaveFH();
 	end
 });
-spawn(function()
-	while wait(0.3) do
+task.spawn(function()
+	while task.wait(0.3) do
 		pcall(function()
 			if _FHAutoSaw then
 				local mob = GetConnectionEnemies("The Saw");
@@ -3870,8 +3870,8 @@ FarmingHopTab:AddToggle({
 		SaveFH();
 	end
 });
-spawn(function()
-	while wait(0.3) do
+task.spawn(function()
+	while task.wait(0.3) do
 		pcall(function()
 			local replicated = game:GetService("ReplicatedStorage");
 			if _FHAutoSaber and World1 then
@@ -3904,8 +3904,8 @@ FarmingHopTab:AddToggle({
 		SaveFH();
 	end
 });
-spawn(function()
-	while wait(0.3) do
+task.spawn(function()
+	while task.wait(0.3) do
 		pcall(function()
 			local plr = game.Players.LocalPlayer;
 			if _FHAutoUsoap then
@@ -3937,8 +3937,8 @@ FarmingHopTab:AddToggle({
 		SaveFH();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		pcall(function()
 			if _FHobsFarm then
 				game:GetService("ReplicatedStorage").Remotes.CommE:FireServer("Ken",true);
@@ -3951,8 +3951,8 @@ spawn(function()
 		end);
 	end;
 end);
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		pcall(function()
 			local plr = game.Players.LocalPlayer;
 			if _FHobsFarm then
@@ -3983,8 +3983,8 @@ FarmingHopTab:AddToggle({
 		SaveFH();
 	end
 });
-spawn(function()
-	while wait(0.5) do
+task.spawn(function()
+	while task.wait(0.5) do
 		pcall(function()
 			if _FHBones then
 				game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Bones","Buy",1,1);
@@ -4005,8 +4005,8 @@ FarmingHopTab:AddToggle({
 		SaveFH();
 	end
 });
-spawn(function()
-	while wait(0.3) do
+task.spawn(function()
+	while task.wait(0.3) do
 		if _FHBisento then
 			pcall(function()
 				local replicated = game:GetService("ReplicatedStorage");
@@ -4042,8 +4042,8 @@ FarmingHopTab:AddToggle({
 		SaveFH();
 	end
 });
-spawn(function()
-	while wait(0.5) do
+task.spawn(function()
+	while task.wait(0.5) do
 		pcall(function()
 			if _FHDarkbeard and World2 then
 				local mob = GetConnectionEnemies("Darkbeard");
@@ -4076,8 +4076,8 @@ FarmingHopTab:AddToggle({
 		SaveFH();
 	end
 });
-spawn(function()
-	while wait(0.3) do
+task.spawn(function()
+	while task.wait(0.3) do
 		pcall(function()
 			if _FHWarden then
 				local mob = GetConnectionEnemies("Chief Warden");
@@ -4114,8 +4114,8 @@ FarmingHopTab:AddToggle({
 		SaveFH();
 	end
 });
-spawn(function()
-	while wait(0.5) do
+task.spawn(function()
+	while task.wait(0.5) do
 		pcall(function()
 			if _G.FarmEliteHunt then
 				if game.Players.LocalPlayer.PlayerGui.Main.Quest.Visible == true then
@@ -4168,8 +4168,8 @@ FarmingHopTab:AddToggle({
 		SaveFH();
 	end
 });
-spawn(function()
-	while wait(0.5) do
+task.spawn(function()
+	while task.wait(0.5) do
 		pcall(function()
 			local plr = game.Players.LocalPlayer;
 			local replicated = game:GetService("ReplicatedStorage");
@@ -4199,8 +4199,8 @@ FarmingHopTab:AddToggle({
 		SaveFH();
 	end
 });
-spawn(function()
-	while wait(0.5) do
+task.spawn(function()
+	while task.wait(0.5) do
 		pcall(function()
 			if _FHRipIndra and World3 then
 				local mob = GetConnectionEnemies("Rip_Indra");
@@ -4236,8 +4236,8 @@ FarmingHopTab:AddToggle({
 		SaveFH();
 	end
 });
-spawn(function()
-	while wait(0.5) do
+task.spawn(function()
+	while task.wait(0.5) do
 		pcall(function()
 			if _FHMarineCoat then
 				local mob = GetConnectionEnemies("Vice Admiral") or GetConnectionEnemies("Fleet Admiral");
@@ -4273,8 +4273,8 @@ FarmingHopTab:AddToggle({
 		SaveFH();
 	end
 });
-spawn(function()
-	while wait(0.5) do
+task.spawn(function()
+	while task.wait(0.5) do
 		pcall(function()
 			if _FHSwanCoat then
 				local mob = GetConnectionEnemies("Don Swan");
@@ -4310,8 +4310,8 @@ FarmingHopTab:AddToggle({
 		SaveFH();
 	end
 });
-spawn(function()
-	while wait(0.5) do
+task.spawn(function()
+	while task.wait(0.5) do
 		pcall(function()
 			if _FHGodChalice then
 				local mob = GetConnectionEnemies("Order") or GetConnectionEnemies("Cake Queen");
@@ -4342,8 +4342,8 @@ FarmingHopTab:AddToggle({
 		if _G.Settings and _G.Settings.FarmHop then _G.Settings.FarmHop["Auto Skull Guitar Mat"] = state; (getgenv()).SaveSetting(); end;
 	end
 });
-spawn(function()
-	while wait(0.5) do
+task.spawn(function()
+	while task.wait(0.5) do
 		pcall(function()
 			if not _FHSkullGuitarMat or not World2 then return; end;
 			local plr = game.Players.LocalPlayer;
@@ -4683,7 +4683,19 @@ end;
 (getgenv()).SaveSetting = function()
 	if readfile and writefile and isfile and isfolder then
 		if not isfile(("TR6.1/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json")) then
-			(getgenv()).Load();
+			local _DUNGEON_PLACE_ID = 73902483975735;
+local WorldDungeon = (game.PlaceId == _DUNGEON_PLACE_ID);
+local _G_Dungeon = {
+	AutoFuseRings    = false,
+	AutoSpinRings    = false,
+	AutoEnterDungeon = false,
+	AutoCompleteDungeon = false,
+	AutoSkipHub      = false,
+	SelectBuffs      = false,
+	AutoFullyDungeon = false,
+	SelectedBuffs    = {},
+};
+(getgenv()).Load();
 		else
 			local Decode = (game:GetService("HttpService")):JSONDecode(readfile("TR6.1/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json"));
 			local Array = {};
@@ -5040,8 +5052,8 @@ local function round(n)
 	return math.floor(tonumber(n) + 0.5);
 end;
 Number = math.random(1, 1000000);
-spawn(function()
-	while wait(1) do
+task.spawn(function()
+	while task.wait(1) do
 		for i, v in pairs((game:GetService("Workspace"))._WorldOrigin.Locations:GetChildren()) do
 			pcall(function()
 				if _G.Settings.Esp["ESP Island"] then
@@ -5072,8 +5084,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait(1) do
+task.spawn(function()
+	while task.wait(1) do
 		for i, v in pairs((game:GetService("Players")):GetChildren()) do
 			pcall(function()
 				if not isnil(v.Character) then
@@ -5110,8 +5122,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait(1) do
+task.spawn(function()
+	while task.wait(1) do
 		for i, v in pairs(game.Workspace.ChestModels:GetChildren()) do
 			pcall(function()
 				if string.find(v.Name, "Chest") then
@@ -5156,8 +5168,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait(1) do
+task.spawn(function()
+	while task.wait(1) do
 		for i, v in pairs(game.Workspace:GetChildren()) do
 			pcall(function()
 				if _G.Settings.Esp["ESP DevilFruit"] then
@@ -5212,8 +5224,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait(0) do
+task.spawn(function()
+	while task.wait(0.05) do
 		for i, v in pairs(game.Workspace._WorldOrigin:GetChildren()) do
 			pcall(function()
 				if _G.Settings.Esp["ESP DevilFruit"] then
@@ -5268,8 +5280,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait(1) do
+task.spawn(function()
+	while task.wait(1) do
 		for i, v in pairs(game.Workspace:GetChildren()) do
 			pcall(function()
 				if v.Name == "Flower2" or v.Name == "Flower1" then
@@ -5309,8 +5321,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait(1) do
+task.spawn(function()
+	while task.wait(1) do
 		for i, v in pairs(game.Workspace.AppleSpawner:GetChildren()) do
 			if v:IsA("Tool") then
 				if _G.Settings.Esp["ESP RealFruit"] then
@@ -5397,8 +5409,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait(1) do
+task.spawn(function()
+	while task.wait(1) do
 		pcall(function()
 			if _G.Settings.Esp["ESP Monster"] then
 				for i, v in pairs((game:GetService("Workspace")).Enemies:GetChildren()) do
@@ -5436,8 +5448,8 @@ spawn(function()
 		end);
 	end;
 end);
-spawn(function()
-	while wait(1) do
+task.spawn(function()
+	while task.wait(1) do
 		pcall(function()
 			if _G.Settings.Esp["ESP Sea Beast"] then
 				for i, v in pairs((game:GetService("Workspace")).SeaBeasts:GetChildren()) do
@@ -5475,8 +5487,8 @@ spawn(function()
 		end);
 	end;
 end);
-spawn(function()
-	while wait(1) do
+task.spawn(function()
+	while task.wait(1) do
 		pcall(function()
 			if _G.Settings.Esp["ESP Npc"] then
 				for i, v in pairs((game:GetService("Workspace")).NPCs:GetChildren()) do
@@ -5514,8 +5526,8 @@ spawn(function()
 		end);
 	end;
 end);
-spawn(function()
-	while wait(1) do
+task.spawn(function()
+	while task.wait(1) do
 		for i, v in pairs((game:GetService("Workspace"))._WorldOrigin.Locations:GetChildren()) do
 			pcall(function()
 				if _G.Settings.Esp["ESP Mirage"] then
@@ -5547,8 +5559,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait(1) do
+task.spawn(function()
+	while task.wait(1) do
 		for i, v in pairs((game:GetService("Workspace"))._WorldOrigin.Locations:GetChildren()) do
 			pcall(function()
 				if _G.Settings.Esp["ESP Kitsune"] then
@@ -5580,8 +5592,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait(1) do
+task.spawn(function()
+	while task.wait(1) do
 		for i, v in pairs((game:GetService("Workspace"))._WorldOrigin.Locations:GetChildren()) do
 			pcall(function()
 				if _G.Settings.Esp["ESP Frozen"] then
@@ -5613,8 +5625,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait(1) do
+task.spawn(function()
+	while task.wait(1) do
 		for i, v in pairs((game:GetService("Workspace"))._WorldOrigin.Locations:GetChildren()) do
 			pcall(function()
 				if _G.Settings.Esp["ESP Prehistoric"] then
@@ -5646,8 +5658,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait(1) do
+task.spawn(function()
+	while task.wait(1) do
 		for i, v in pairs((game:GetService("Workspace")).NPCs:GetChildren()) do
 			pcall(function()
 				if _G.Settings.Esp["ESP Advanced Fruit Dealer"] then
@@ -5679,8 +5691,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait(1) do
+task.spawn(function()
+	while task.wait(1) do
 		for i, v in pairs((game:GetService("Workspace")).NPCs:GetChildren()) do
 			pcall(function()
 				if _G.Settings.Esp["ESP Aura"] then
@@ -5712,8 +5724,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait(1) do
+task.spawn(function()
+	while task.wait(1) do
 		if (game:GetService("Workspace")).Map:FindFirstChild("MysticIsland") then
 			for i, v in pairs((game:GetService("Workspace")).Map.MysticIsland:GetChildren()) do
 				pcall(function()
@@ -6009,7 +6021,7 @@ spawn(function()
 		end;
 	end;
 end);
-task.spawn(function()
+task.task.spawn(function()
 	while task.wait(0.8) do
 		local farmActive = _G.Settings.Main["Auto Farm"]
 			or _G.Settings.Main["Auto Farm Mon"]
@@ -6350,7 +6362,7 @@ function EquipWeaponSword()
 end;
 spawn(function()
 	local angle = 0;
-	while wait() do
+	while task.wait(0.1) do
 		if _G.Settings.Setting["Spin Position"] then
 			local radius = 20;
 			local farmDistance = _G.Settings.Setting["Farm Distance"];
@@ -6367,7 +6379,7 @@ spawn(function()
 end);
 spawn(function()
 	pcall(function()
-		while wait() do
+		while task.wait(0.1) do
 			if World1 then
 				if _G.Settings.Farm["Auto Farm Leather"] or _G.Settings.Farm["Auto Farm Magma Ore"] or _G.Settings.Farm["Auto Farm Scrap Metal"] or _G.Settings.Items["Auto Saber"] or _G.Settings.Items["Auto Second Sea"] or _G.Settings.Items["Auto Warden Sword"] or _G.Settings.Items["Auto Greybeard"] or _G.Settings.Items["Auto Pole"] or _G.Settings.Items["Auto Shark Saw"] or _G.Settings.Farm["Auto Farm Angel Wings"] then
 					if not (game:GetService("Players")).LocalPlayer.Character.HumanoidRootPart:FindFirstChild("BodyClip") then
@@ -6384,7 +6396,7 @@ spawn(function()
 end);
 spawn(function()
 	pcall(function()
-		while wait() do
+		while task.wait(0.1) do
 			if World1 then
 				if _G.Settings.Items["Auto Saber"] or _G.Settings.Items["Auto Second Sea"] or _G.Settings.Items["Auto Warden Sword"] or _G.Settings.Items["Auto Greybeard"] or _G.Settings.Items["Auto Pole"] or _G.Settings.Items["Auto Shark Saw"] then
 					for _, v in pairs((game:GetService("Players")).LocalPlayer.Character:GetDescendants()) do
@@ -6399,7 +6411,7 @@ spawn(function()
 end);
 spawn(function()
 	pcall(function()
-		while wait() do
+		while task.wait(0.1) do
 			if World2 then
 				if _G.Settings.Items["Auto Farm Factory"] or _G.Settings.Items["Auto Swan Glasses"] or _G.Settings.Raid["Law Raid"] or _G.Settings.Race["Auto Race V2"] or _G.Settings.Items["Auto Rengoku"] or _G.Settings.Items["Auto Bartilo Quest"] or _G.Settings.Items["Auto Third Sea"] or _G.Settings.Items["Auto Dragon Trident"] or _G.Settings.SeaStack["Auto Attack Seabeasts"] or _G.Settings.Raid["Auto Raid"] then
 					if not (game:GetService("Players")).LocalPlayer.Character.HumanoidRootPart:FindFirstChild("BodyClip") then
@@ -6416,7 +6428,7 @@ spawn(function()
 end);
 spawn(function()
 	pcall(function()
-		while wait() do
+		while task.wait(0.1) do
 			if World2 then
 				if _G.Settings.Items["Auto Farm Factory"] or _G.Settings.Items["Auto Swan Glasses"] or _G.Settings.Raid["Law Raid"] or _G.Settings.Race["Auto Race V2"] or _G.Settings.Items["Auto Rengoku"] or _G.Settings.Items["Auto Bartilo Quest"] or _G.Settings.Items["Auto Third Sea"] or _G.Settings.Items["Auto Dragon Trident"] or _G.Settings.SeaStack["Auto Attack Seabeasts"] or _G.Settings.Raid["Auto Raid"] then
 					for _, v in pairs((game:GetService("Players")).LocalPlayer.Character:GetDescendants()) do
@@ -6431,7 +6443,7 @@ spawn(function()
 end);
 spawn(function()
 	pcall(function()
-		while wait() do
+		while task.wait(0.1) do
 			if World3 then
 				if _G.Settings.Farm["Auto Pirate Raid"] or _G.Settings.Race["Auto Race V3"] or _G.Settings.Farm["Auto Kill Cake Prince"] or _G.Settings.SeaStack["Tween To Kitsune Island"] or _G.Settings.SeaStack["Teleport To Frozen Dimension"] or _G.Settings.SeaStack["Sail To Frozen Dimension"] or _G.Settings.SeaStack["Summon Frozen Dimension"] or _G.Settings.SeaStack["Summon Kitsune Island"] or _G.Settings.SeaStack["Tween To Mirage Island"] or _G.Settings.Race["Auto Train"] or _G.Settings.Items["Auto Press Haki Button"] or _G.Settings.SeaEvent["Sail Boat"] or _G.Settings.Items["Auto Arena Trainer"] or _G.Settings.Race["Auto Kill Player After Trial"] or _G.Settings.Race["Tween To Highest Mirage"] or _G.Settings.Race["Auto Trial"] or _G.Settings.Race["Find Blue Gear"] or _G.Settings.Combat["Auto Kill Player Quest"] or _G.Settings.Items["Auto Cursed Dual Katana"] or _G.Settings.Farm["Auto Farm Bone"] or _G.Settings.Farm["Auto Kill Dough King"] or _G.Settings.Items["Auto Soul Guitar"] or _G.Settings.Items["Auto Tushita"] or _G.Settings.Farm["Auto Elite Hunter"] or _G.AutoKillSelectedPlayer or _G.Settings.Items["Auto Rainbow Haki"] or _G.Settings.Items["Auto Dark Dagger"] or _G.Settings.Farm["Auto Farm Ectoplasm"] or _G.Settings.Farm["Auto Observation V2"] or _G.Settings.Farm["Auto Musketeer Hat"] or _G.Settings.Items["Auto Holy Torch"] or _G.Settings.Items["Auto Hallow Scythe"] or _G.Settings.Farm["Auto Farm Katakuri"] or _G.Settings.Items["Auto Buddy Sword"] or _G.Settings.Items["Auto Canvander"] or _G.Settings.Raid["Auto Raid"] or _G.Settings.Main["Auto Summon Tyrant Of The Skies"] or _G.Settings.Main["Auto Kill Tyrant Of The Skies"] then
 					if not (game:GetService("Players")).LocalPlayer.Character.HumanoidRootPart:FindFirstChild("BodyClip") then
@@ -6448,7 +6460,7 @@ spawn(function()
 end);
 spawn(function()
 	pcall(function()
-		while wait() do
+		while task.wait(0.1) do
 			if World3 then
 				if _G.Settings.Farm["Auto Pirate Raid"] or _G.Settings.Race["Auto Race V3"] or _G.Settings.Farm["Auto Kill Cake Prince"] or _G.Settings.SeaStack["Tween To Kitsune Island"] or _G.Settings.SeaStack["Teleport To Frozen Dimension"] or _G.Settings.SeaStack["Sail To Frozen Dimension"] or _G.Settings.SeaStack["Summon Frozen Dimension"] or _G.Settings.SeaStack["Summon Kitsune Island"] or _G.Settings.SeaStack["Tween To Mirage Island"] or _G.Settings.Race["Auto Train"] or _G.Settings.Items["Auto Press Haki Button"] or _G.Settings.SeaEvent["Sail Boat"] or _G.Settings.Items["Auto Arena Trainer"] or _G.Settings.Race["Auto Kill Player After Trial"] or _G.Settings.Race["Tween To Highest Mirage"] or _G.Settings.Race["Auto Trial"] or _G.Settings.Race["Find Blue Gear"] or _G.Settings.Combat["Auto Kill Player Quest"] or _G.Settings.Items["Auto Cursed Dual Katana"] or _G.Settings.Farm["Auto Farm Bone"] or _G.Settings.Farm["Auto Kill Dough King"] or _G.Settings.Items["Auto Soul Guitar"] or _G.Settings.Items["Auto Tushita"] or _G.Settings.Farm["Auto Elite Hunter"] or _G.AutoKillSelectedPlayer or _G.Settings.Items["Auto Rainbow Haki"] or _G.Settings.Items["Auto Dark Dagger"] or _G.Settings.Farm["Auto Farm Ectoplasm"] or _G.Settings.Farm["Auto Observation V2"] or _G.Settings.Farm["Auto Musketeer Hat"] or _G.Settings.Items["Auto Holy Torch"] or _G.Settings.Items["Auto Hallow Scythe"] or _G.Settings.Farm["Auto Farm Katakuri"] or _G.Settings.Items["Auto Buddy Sword"] or _G.Settings.Items["Auto Canvander"] or _G.Settings.Farm["Auto Farm Leather"] or _G.Settings.Raid["Auto Raid"] or _G.Settings.Main["Auto Summon Tyrant Of The Skies"] or _G.Settings.Main["Auto Kill Tyrant Of The Skies"] then
 					for _, v in pairs((game:GetService("Players")).LocalPlayer.Character:GetDescendants()) do
@@ -6463,7 +6475,7 @@ spawn(function()
 end);
 spawn(function()
 	pcall(function()
-		while wait() do
+		while task.wait(0.1) do
 			if _G.Settings.Main["Auto Farm"] or _G.Settings.Farm["Auto Farm Chest Tween"] or _G.Settings.Items["Auto Electric Claw"] or _G.Settings.Main["Auto Farm Fruit Mastery"] or _G.Settings.Main["Auto Farm Gun Mastery"] or _G.TeleportIsland or _G.AutoKillSelectedPlayer or _G.TeleportToPlayer or _G.Settings.Farm["Auto Farm Observation"] or _G.Settings.Fruit["Tween To Fruit"] or _G.TeleportNPC or _G.Settings.Main["Auto Farm Mon"] or _G.Settings.Main["Auto Farm Fast"] or _G.Settings.Main["Auto Farm All Boss"] or _G.Settings.Main["Auto Farm Boss"] or _G.Settings.Main["Auto Farm Sword Mastery"] or _G.Settings.Farm["Auto Farm Material"] then
 				if not (game:GetService("Players")).LocalPlayer.Character.HumanoidRootPart:FindFirstChild("BodyClip") then
 					local Noclip = Instance.new("BodyVelocity");
@@ -6514,7 +6526,7 @@ function RemoveAnimation(Mon)
 end;
 spawn(function()
 	pcall(function()
-		while wait() do
+		while task.wait(0.1) do
 			for i, v in pairs((game:GetService("Players")).LocalPlayer.Backpack:GetChildren()) do
 				if v:IsA("Tool") then
 					if v:FindFirstChild("RemoteFunctionShoot") then
@@ -6625,8 +6637,8 @@ AutoLevelFarmToggle = MainTab:AddToggle({
 	end
 });
 
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.EclipseLevel and _G.EclipseStartFarm then
 			pcall(function()
 				CheckQuest();
@@ -6713,7 +6725,7 @@ spawn(function()
 end);
 
 -- LOOP 2: BONE FARM - Haunted Castle
-spawn(function()
+task.spawn(function()
 	while task.wait() do
 		if _G.EclipseFarm_Bone and _G.EclipseStartFarm then
 			pcall(function()
@@ -6766,7 +6778,7 @@ spawn(function()
 end);
 
 -- LOOP 3: CAKE PRINCE FARM
-spawn(function()
+task.spawn(function()
 	while task.wait() do
 		if _G.EclipseFarm_Cake and _G.EclipseStartFarm then
 			pcall(function()
@@ -6996,7 +7008,7 @@ local _tyrantDodgeIdx = 1;
 local _tyrantLastDodgeTime = 0;
 local _TYRANT_DODGE_INTERVAL = 0.35;
 
-task.spawn(function()
+task.task.spawn(function()
 	while task.wait(0.05) do
 		if not (_G.EclipseAutoTyrant and _G.EclipseStartFarm) then continue; end;
 		pcall(function()
@@ -7197,8 +7209,8 @@ function getInfoSword(SwordName)
 	end;
 	return false;
 end;
-spawn(function()
-	while wait() do
+task.spawn(function()
+	while task.wait(0.1) do
 		pcall(function()
 			if _G.Settings.Main["Auto Farm Sword Mastery"] then
 				if not getInfoSword(_G.Settings.Main["Selected Mastery Sword"]) then
@@ -7217,7 +7229,7 @@ AutoSwordMasteryToggle = MainTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
+task.spawn(function()
 	while task.wait(0.2) do
 		if _G.Settings.Main["Auto Farm Sword Mastery"] and _G.Settings.Main["Mastery Method"] == "Quest" then
 			pcall(function()
@@ -7393,7 +7405,7 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
+task.spawn(function()
 	while task.wait(0.2) do
 		if _G.Settings.Main["Auto Farm Fruit Mastery"] and _G.Settings.Main["Mastery Method"] == "Quest" then
 			pcall(function()
@@ -7647,7 +7659,7 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
+task.spawn(function()
 	while task.wait(0.2) do
 		if _G.Settings.Main["Auto Farm Gun Mastery"] and _G.Settings.Main["Mastery Method"] == "Quest" then
 			pcall(function()
@@ -8025,8 +8037,8 @@ AutoMonFarmToggle = MainTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Main["Auto Farm Mon"] then
 			pcall(function()
 				if (game:GetService("Workspace")).Enemies:FindFirstChild(_G.Settings.Main["Selected Mon"]) then
@@ -8058,8 +8070,8 @@ BossStatusParagraph = FarmingHopTab:AddParagraph({
 	Title = "Boss Status",
 	Desc = "N/A"
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		pcall(function()
 			if (game:GetService("ReplicatedStorage")):FindFirstChild(_G.Settings.Main["Selected Boss"]) or (game:GetService("Workspace")).Enemies:FindFirstChild(_G.Settings.Main["Selected Boss"]) then
 				BossStatusParagraph:SetDesc("Spawn!");
@@ -8131,8 +8143,8 @@ AutoFarmBossToggle = FarmingHopTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Main["Auto Farm Boss"] then
 			pcall(function()
 				if (game:GetService("Workspace")).Enemies:FindFirstChild(_G.Settings.Main["Selected Boss"]) then
@@ -8167,8 +8179,8 @@ AutoFarmAllBossToggle = FarmingHopTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Main["Auto Farm All Boss"] then
 			pcall(function()
 				for i, boss in pairs(tableBoss) do
@@ -8214,8 +8226,8 @@ local _FACTORY_PORTAL_POS = Vector3.new(1073.47, 14.52, 1560.72);
 local _FACTORY_TOP_CF     = CFrame.new(1002.53, 500, 1522.34);   
 local _FACTORY_MOB_CF     = CFrame.new(1002.53, 490, 1520.0);     
 
-spawn(function()
-	while wait(0.5) do
+task.spawn(function()
+	while task.wait(0.5) do
 		if not _G.Settings.Farm["Auto Factory Raid"] then continue; end;
 		pcall(function()
 			local plr = game.Players.LocalPlayer;
@@ -8290,8 +8302,8 @@ function getPirateRaidEnemies()
 		end;
 	end;
 end;
-spawn(function()
-	while wait() do
+task.spawn(function()
+	while task.wait(0.1) do
 		if _G.Settings.Farm["Auto Pirate Raid"] then
 			pcall(function()
 				for i, v in pairs(game.Workspace.Enemies:GetChildren()) do
@@ -8869,8 +8881,8 @@ AutoStopItemsToggle = OthersTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait() do
+task.spawn(function()
+	while task.wait(0.1) do
 		pcall(function()
 			if _G.Settings.Farm["Auto Stop Items"] then
 				if (game:GetService("Players")).LocalPlayer.Backpack:FindFirstChild("God's Chalice") or (game:GetService("Players")).LocalPlayer.Character:FindFirstChild("God's Chalice") or (game:GetService("Players")).LocalPlayer.Backpack:FindFirstChild("Fist of Darkness") or (game:GetService("Players")).LocalPlayer.Character:FindFirstChild("Fist of Darkness") then
@@ -8882,8 +8894,8 @@ spawn(function()
 		end);
 	end;
 end);
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		pcall(function()
 			if _G.Settings.Farm["Auto Farm Chest Tween"] then
 				for i, v in pairs((game:GetService("Workspace")).ChestModels:GetChildren()) do
@@ -8899,8 +8911,8 @@ spawn(function()
 		end);
 	end;
 end);
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		pcall(function()
 			if _G.Settings.Farm["Auto Farm Chest Instant"] then
 				for i, v in pairs((game:GetService("Workspace")).ChestModels:GetChildren()) do
@@ -8926,7 +8938,7 @@ CakePrinceStatusParagraph = OthersTab:AddParagraph({
 	Title = "Cake Prince Status",
 	Desc = "N/A"
 });
-spawn(function()
+task.spawn(function()
 	while task.wait(5) do
 		pcall(function()
 			if World3 then
@@ -8965,16 +8977,16 @@ AutoSpawnCakePrinceToggle = OthersTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Farm["Auto Spawn Cake Prince"] and World3 then
 			wait(2);
 			(game:GetService("ReplicatedStorage")).Remotes.CommF_:InvokeServer("CakePrinceSpawner", true);
 		end;
 	end;
 end);
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Farm["Auto Farm Katakuri"] and World3 then
 			pcall(function()
 				if game.ReplicatedStorage:FindFirstChild("Cake Prince") or (game:GetService("Workspace")).Enemies:FindFirstChild("Cake Prince") then
@@ -9044,8 +9056,8 @@ AutoKillDoughKingToggle = OthersTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Farm["Auto Kill Cake Prince"] and World3 then
 			pcall(function()
 				if (game:GetService("Workspace")).Enemies:FindFirstChild("Cake Prince") then
@@ -9075,8 +9087,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Farm["Auto Kill Dough King"] and World3 then
 			pcall(function()
 				if (game:GetService("Workspace")).Enemies:FindFirstChild("Dough King") then
@@ -9240,8 +9252,8 @@ AutoFarmMaterialToggle = MainTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Farm["Auto Farm Material"] then
 			pcall(function()
 				getConfigMaterial(_G.Settings.Farm["Selected Material"]);
@@ -9401,8 +9413,8 @@ ChooseWeaponDropdown = SettingsTab:AddDropdown({
 		(getgenv()).SaveSetting();
 	end
 });
-task.spawn(function()
-	while wait(0.3) do
+task.task.spawn(function()
+	while task.wait(0.3) do
 		pcall(function()
 			local tooltip = (_G.ChooseWP == "Fruit") and "Blox Fruit" or (_G.ChooseWP or "Melee");
 			for _, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
@@ -9486,8 +9498,8 @@ SettingsTab:AddSlider({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.5) do
+task.spawn(function()
+	while task.wait(0.5) do
 		pcall(function()
 			local char = game.Players.LocalPlayer.Character;
 			if not char then return; end;
@@ -9661,8 +9673,8 @@ spawn(function()
 	end;
 end);
 
-spawn(function()
-	while wait() do
+task.spawn(function()
+	while task.wait(0.1) do
 		if _G.Settings.Setting["Fast Attack Mode"] == "Slow" then
 			_G.Settings.Setting["Fast Attack Delay"] = 0.32;
 		elseif _G.Settings.Setting["Fast Attack Mode"] == "Normal" then
@@ -9674,8 +9686,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait() do
+task.spawn(function()
+	while task.wait(0.1) do
 		if _G.Settings.Setting["Bring Mob"] then
 			pcall(function()
 				if _G.Settings.Setting["Bring Mob Mode"] == "Low" then
@@ -9717,8 +9729,8 @@ HideNotificationToggle = SettingsTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Setting["Hide Notification"] then
 			game.Players.LocalPlayer.PlayerGui.Notifications.Enabled = false;
 		else
@@ -9735,8 +9747,8 @@ HideDamageTextToggle = SettingsTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Setting["Hide Damage Text"] then
 			(game:GetService("ReplicatedStorage")).Assets.GUI.DamageCounter.Enabled = false;
 		else
@@ -9753,8 +9765,8 @@ BlackScreenToggle = SettingsTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Setting["Black Screen"] then
 			(game:GetService("Players")).LocalPlayer.PlayerGui.Main.Blackscreen.Size = UDim2.new(500, 0, 500, 500);
 		else
@@ -9771,8 +9783,8 @@ WhiteScreenToggle = SettingsTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Setting["White Screen"] then
 			(game:GetService("RunService")):Set3dRenderingEnabled(false);
 		else
@@ -9937,8 +9949,8 @@ AutoObservationToggle = SettingsTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Setting["Auto Observation"] then
 			if not (game:GetService("Players")).LocalPlayer.PlayerGui.ScreenGui:FindFirstChild("ImageLabel") then
 				(game:GetService("VirtualUser")):CaptureController();
@@ -9965,8 +9977,8 @@ AutoRejoinToggle = SettingsTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Setting["Auto Rejoin"] then
 			game.CoreGui.RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(v)
 				if v.Name == "ErrorPrompt" and v:FindFirstChild("MessageArea") and v.MessageArea:FindFirstChild("ErrorFrame") then
@@ -9976,8 +9988,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Setting["Auto Haki"] then
 			if not game.Players.LocalPlayer.Character:FindFirstChild("HasBuso") then
 				(game:GetService("ReplicatedStorage")).Remotes.CommF_:InvokeServer("Buso");
@@ -10007,8 +10019,8 @@ AutoThirdSeaToggle = FarmingHopTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Items["Auto Third Sea"] then
 			pcall(function()
 				if (game:GetService("Players")).LocalPlayer.Data.Level.Value >= 1500 and World2 then
@@ -10045,8 +10057,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Items["Auto Second Sea"] and World1 then
 			pcall(function()
 				local MyLevel = (game:GetService("Players")).LocalPlayer.Data.Level.Value;
@@ -10153,7 +10165,7 @@ AutoGodHumanToggle = FarmingHopTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
+task.spawn(function()
 	while task.wait(0.2) do
 		if _G.Settings.Items["Auto God Human"] then
 			pcall(function()
@@ -10234,8 +10246,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Items["Auto Dragon Talon"] then
 			if (game:GetService("Players")).LocalPlayer.Backpack:FindFirstChild("Dragon Claw") or (game:GetService("Players")).LocalPlayer.Character:FindFirstChild("Dragon Claw") or (game:GetService("Players")).LocalPlayer.Backpack:FindFirstChild("Dragon Talon") or (game:GetService("Players")).LocalPlayer.Character:FindFirstChild("Dragon Talon") then
 				if (game:GetService("Players")).LocalPlayer.Backpack:FindFirstChild("Dragon Claw") and ((game:GetService("Players")).LocalPlayer.Backpack:FindFirstChild("Dragon Claw")).Level.Value >= 400 then
@@ -10366,8 +10378,8 @@ spawn(function()
 		end;
 	end);
 end);
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Items["Auto Death Step"] then
 			if (game:GetService("Players")).LocalPlayer.Backpack:FindFirstChild("Black Leg") or (game:GetService("Players")).LocalPlayer.Character:FindFirstChild("Black Leg") or (game:GetService("Players")).LocalPlayer.Backpack:FindFirstChild("Death Step") or (game:GetService("Players")).LocalPlayer.Character:FindFirstChild("Death Step") then
 				if (game:GetService("Players")).LocalPlayer.Backpack:FindFirstChild("Black Leg") and ((game:GetService("Players")).LocalPlayer.Backpack:FindFirstChild("Black Leg")).Level.Value >= 450 then
@@ -10470,7 +10482,7 @@ AutoGetSaberToggle = FarmingHopTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
+task.spawn(function()
 	while task.wait(0.2) do
 		if _G.Settings.Items["Auto Saber"] and World1 and game.Players.LocalPlayer.Data.Level.Value >= 200 then
 			pcall(function()
@@ -10577,8 +10589,8 @@ AutoBuddySwordToggle = FarmingHopTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Items["Auto Buddy Sword"] and World3 then
 			pcall(function()
 				if (game:GetService("Workspace")).Enemies:FindFirstChild("Cake Queen") then
@@ -10907,9 +10919,9 @@ function AutoSoulGuitar()
 						firetouchinterest(v, game.Players.LocalPlayer.Character.HumanoidRootPart, 1);
 					end;
 					if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.Position).Magnitude <= 5 then
-						(game:service("VirtualInputManager")):SendKeyEvent(true, "W", false, game);
+						(game:GetService("VirtualInputManager")):SendKeyEvent(true, "W", false, game);
 						task.wait();
-						(game:service("VirtualInputManager")):SendKeyEvent(false, "W", false, game);
+						(game:GetService("VirtualInputManager")):SendKeyEvent(false, "W", false, game);
 					end;
 					InstantTp(v.CFrame * CFrame.new(0, 1, 0));
 				until not v or (not v.Parent) or (not _G.Settings.Items["Auto Soul Guitar"]);
@@ -10950,8 +10962,8 @@ AutoSoulGuitarToggle = FarmingHopTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		pcall(function()
 			if _G.Settings.Items["Auto Soul Guitar"] then
 				AutoSoulGuitar();
@@ -11032,8 +11044,8 @@ FarmingHopTab:AddToggle({
 		if _G.Settings and _G.Settings.Items then _G.Settings.Items["Auto CDK"] = state; (getgenv()).SaveSetting(); end;
 	end
 });
-spawn(function()
-	while wait(0.3) do
+task.spawn(function()
+	while task.wait(0.3) do
 		pcall(function()
 			if _G._CDK_Active then
 				local replicated = game:GetService("ReplicatedStorage");
@@ -11071,8 +11083,8 @@ FarmingHopTab:AddToggle({
 		if _G.Settings and _G.Settings.Items then _G.Settings.Items["Auto Yama CDK"] = state; (getgenv()).SaveSetting(); end;
 	end
 });
-spawn(function()
-	while wait(0.3) do
+task.spawn(function()
+	while task.wait(0.3) do
 		pcall(function()
 			if _G._CDK_YM_Active then
 				local replicated = game:GetService("ReplicatedStorage");
@@ -11410,8 +11422,8 @@ task.spawn(function()
 	end;
 end);
 
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Items["Auto Pole"] and World1 then
 			pcall(function()
 				if (game:GetService("Workspace")).Enemies:FindFirstChild("Thunder God") then
@@ -11438,8 +11450,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Items["Auto Shark Saw"] and World1 then
 			pcall(function()
 				if (game:GetService("Workspace")).Enemies:FindFirstChild("The Saw") then
@@ -11466,8 +11478,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Items["Auto Greybeard"] and World1 then
 			pcall(function()
 				if (game:GetService("Workspace")).Enemies:FindFirstChild("Greybeard") then
@@ -11494,8 +11506,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Items["Auto Dragon Trident"] and World2 then
 			pcall(function()
 				if (game:GetService("Workspace")).Enemies:FindFirstChild("Tide Keeper") then
@@ -11553,8 +11565,8 @@ function CheckNameBoss(a)
 		end;
 	end;
 end;
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Items["Auto Tushita"] and World3 then
 			pcall(function()
 				if not (game:GetService("Workspace")).Map.Turtle:FindFirstChild("TushitaGate") then
@@ -11592,8 +11604,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Items["Auto Yama Hop"] and World3 then
 			pcall(function()
 				if (game:GetService("ReplicatedStorage")).Remotes.CommF_:InvokeServer("EliteHunter", "Progress") < 30 then
@@ -11607,8 +11619,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Items["Auto Yama"] and World3 then
 			if (game:GetService("ReplicatedStorage")).Remotes.CommF_:InvokeServer("EliteHunter", "Progress") >= 30 then
 				repeat
@@ -11639,8 +11651,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Items["Auto Warden Sword"] and World1 then
 			pcall(function()
 				if (game:GetService("Workspace")).Enemies:FindFirstChild("Chief Warden") then
@@ -11667,8 +11679,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Items["Auto Hallow Scythe"] then
 			pcall(function()
 				if (game:GetService("Workspace")).Enemies:FindFirstChild("Soul Reaper") then
@@ -11703,8 +11715,8 @@ StatsPointParagraph = StatsTab:AddParagraph({
 	Title = "Stats",
 	Desc = "0"
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		pcall(function()
 			StatsPointParagraph:SetDesc(tostring((game:GetService("Players")).LocalPlayer.Data.Points.Value));
 		end);
@@ -11758,8 +11770,8 @@ StatsPointToAddSlider = StatsTab:AddSlider({
 		PointStats = value;
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if game.Players.localPlayer.Data.Points.Value >= PointStats then
 			if _G.Settings.Stats["Auto Add Melee Stats"] then
 				local args = {
@@ -11818,8 +11830,8 @@ local RaidStatusParagraph = RaidTab:AddParagraph({
 	Desc = "Desligado"
 });
 
-spawn(function()
-	while wait(0.5) do
+task.spawn(function()
+	while task.wait(0.5) do
 		pcall(function()
 			local raidActive = game.Players.LocalPlayer.PlayerGui.Main.TopHUDList.RaidTimer.Visible;
 			if _G.Settings.Raid["Auto Raid"] then
@@ -11982,8 +11994,8 @@ AutoAwakeningToggle = RaidTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Raid["Auto Awaken"] then
 			pcall(function()
 				(game:GetService("ReplicatedStorage")).Remotes.CommF_:InvokeServer("Awakener","Awaken");
@@ -12009,8 +12021,8 @@ AutoUnstoreDevilFruitToggle = RaidTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		pcall(function()
 			if _G.Settings.Raid["Unstore Devil Fruit"] then
 				local fruit = (game:GetService("ReplicatedStorage")).Remotes.CommF_:InvokeServer("getInventoryFruits");
@@ -12115,8 +12127,8 @@ TeleportToPlaceToggle = RaceTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Race["Teleport To Place"] then
 			pcall(function()
 				if _G.Settings.Race["Selected Place"] == "Top Of GreatTree" then
@@ -12178,8 +12190,8 @@ LookMoonAbilityToggle = RaceTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		pcall(function()
 			if _G.Settings.Race["Look Moon Ability"] then
 				wait();
@@ -12211,8 +12223,8 @@ spawn(function()
 		end;
 	end);
 end);
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if StartFarmTrain and World3 then
 			pcall(function()
 				if (game:GetService("Workspace")).Enemies:FindFirstChild("Cocoa Warrior") or (game:GetService("Workspace")).Enemies:FindFirstChild("Chocolate Bar Battler") or (game:GetService("Workspace")).Enemies:FindFirstChild("Sweet Thief") or (game:GetService("Workspace")).Enemies:FindFirstChild("Candy Rebel") then
@@ -12250,8 +12262,8 @@ spawn(function()
 		end;
 	end);
 end);
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		pcall(function()
 			if _G.Settings.Race["Auto Train"] then
 				if tonumber(((game:GetService("Players")).LocalPlayer.Character:WaitForChild("RaceEnergy")).Value) == 1 then
@@ -12366,8 +12378,8 @@ CombatTab:AddToggle({
 		_PvPAutoTP = v;
 	end
 });
-spawn(function()
-	while wait(0.1) do
+task.spawn(function()
+	while task.wait(0.1) do
 		if _PvPAutoTP and SelectedPvPTarget then
 			pcall(function()
 				local target = game:GetService("Players"):FindFirstChild(SelectedPvPTarget);
@@ -12408,8 +12420,8 @@ CombatTab:AddToggle({
 		_PvPAutoKill = v;
 	end
 });
-spawn(function()
-	while wait(0.1) do
+task.spawn(function()
+	while task.wait(0.1) do
 		if _PvPAutoKill and SelectedPvPTarget then
 			pcall(function()
 				local target = game:GetService("Players"):FindFirstChild(SelectedPvPTarget);
@@ -12547,7 +12559,7 @@ CombatTab:AddToggle({
 	end
 });
 
-spawn(function()
+task.spawn(function()
 	while task.wait(0.03) do
 		pcall(function()
 			if _G.AimLockSkill and SelectedPvPTarget then
@@ -12598,7 +12610,7 @@ CombatTab:AddToggle({
 	end
 });
 
-spawn(function()
+task.spawn(function()
 	while task.wait(0.03) do
 		pcall(function()
 			local target = nil;
@@ -12637,7 +12649,7 @@ spawn(function()
 	end;
 end);
 
-spawn(function()
+task.spawn(function()
 	while task.wait(0.5) do
 		pcall(function()
 			local char = game.Players.LocalPlayer.Character;
@@ -12723,8 +12735,8 @@ AutoKillPlayerAfterTrialToggle = RaceTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Race["Auto Kill Player After Trial"] then
 			if (game:GetService("Players")).LocalPlayer.PlayerGui.Main.TopHUDList.Timer.Visible == true then
 				for i, v in pairs((game:GetService("Players")):GetPlayers()) do
@@ -12775,8 +12787,8 @@ AutoBuyLegendarySwordToggle = ShopTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Shop["Auto Buy Legendary Sword"] then
 			pcall(function()
 				(game:GetService("ReplicatedStorage")).Remotes.CommF_:InvokeServer("LegendarySwordDealer", "1");
@@ -12794,8 +12806,8 @@ AutoBuyHakiColorToggle = ShopTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Shop["Auto Buy Haki Color"] then
 			(game:GetService("ReplicatedStorage")).Remotes.CommF_:InvokeServer("ColorsDealer", "2");
 		end;
@@ -13568,8 +13580,8 @@ DragonDojoTab:AddToggle({
 	end
 });
 
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G_Dojoo then
 			pcall(function()
 				local I = {{[1] = {NPC="Dojo Trainer", Command="RequestQuest"}}};
@@ -13666,8 +13678,8 @@ function getIsOnQuest()
 	end;
 	return false;
 end;
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.DragonDojo["Auto Farm Blaze Ember"] then
 			pcall(function()
 				if not _G.OnBlzeQuest and (not getIsOnQuest()) then
@@ -13693,15 +13705,15 @@ function SaveBlazeEmberQuest()
 	end;
 end;
 _G.OnBlzeQuest = false;
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if isQuestCompleated() then
 			_G.OnBlzeQuest = false;
 		end;
 	end;
 end);
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.DragonDojo["Auto Farm Blaze Ember"] then
 			pcall(function()
 				if _G.BlazeEmberQuest == "Venomous Assailant" and _G.OnBlzeQuest then
@@ -13814,21 +13826,21 @@ function useAllSkill()
 				end;
 			end;
 		end;
-		(game:service("VirtualInputManager")):SendKeyEvent(true, "Z", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(true, "Z", false, game);
 		wait(0);
-		(game:service("VirtualInputManager")):SendKeyEvent(false, "Z", false, game);
-		(game:service("VirtualInputManager")):SendKeyEvent(true, "X", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(false, "Z", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(true, "X", false, game);
 		wait(0);
-		(game:service("VirtualInputManager")):SendKeyEvent(false, "X", false, game);
-		(game:service("VirtualInputManager")):SendKeyEvent(true, "C", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(false, "X", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(true, "C", false, game);
 		wait(0);
-		(game:service("VirtualInputManager")):SendKeyEvent(false, "C", false, game);
-		(game:service("VirtualInputManager")):SendKeyEvent(true, "V", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(false, "C", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(true, "V", false, game);
 		wait(0);
-		(game:service("VirtualInputManager")):SendKeyEvent(false, "V", false, game);
-		(game:service("VirtualInputManager")):SendKeyEvent(true, "F", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(false, "V", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(true, "F", false, game);
 		wait(0);
-		(game:service("VirtualInputManager")):SendKeyEvent(false, "F", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(false, "F", false, game);
 		DoneSkillFruit = true;
 	end;
 	if DoneSkillMelee == false then
@@ -13839,18 +13851,18 @@ function useAllSkill()
 				end;
 			end;
 		end;
-		(game:service("VirtualInputManager")):SendKeyEvent(true, "Z", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(true, "Z", false, game);
 		wait(0);
-		(game:service("VirtualInputManager")):SendKeyEvent(false, "Z", false, game);
-		(game:service("VirtualInputManager")):SendKeyEvent(true, "X", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(false, "Z", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(true, "X", false, game);
 		wait(0);
-		(game:service("VirtualInputManager")):SendKeyEvent(false, "X", false, game);
-		(game:service("VirtualInputManager")):SendKeyEvent(true, "C", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(false, "X", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(true, "C", false, game);
 		wait(0);
-		(game:service("VirtualInputManager")):SendKeyEvent(false, "C", false, game);
-		(game:service("VirtualInputManager")):SendKeyEvent(true, "V", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(false, "C", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(true, "V", false, game);
 		wait(0);
-		(game:service("VirtualInputManager")):SendKeyEvent(false, "V", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(false, "V", false, game);
 		DoneSkillMelee = true;
 	end;
 	if DoneSkillSword == false then
@@ -13861,12 +13873,12 @@ function useAllSkill()
 				end;
 			end;
 		end;
-		(game:service("VirtualInputManager")):SendKeyEvent(true, "Z", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(true, "Z", false, game);
 		wait(0);
-		(game:service("VirtualInputManager")):SendKeyEvent(false, "Z", false, game);
-		(game:service("VirtualInputManager")):SendKeyEvent(true, "X", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(false, "Z", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(true, "X", false, game);
 		wait(0);
-		(game:service("VirtualInputManager")):SendKeyEvent(false, "X", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(false, "X", false, game);
 		DoneSkillSword = true;
 	end;
 	if DoneSkillGun == false then
@@ -13877,12 +13889,12 @@ function useAllSkill()
 				end;
 			end;
 		end;
-		(game:service("VirtualInputManager")):SendKeyEvent(true, "Z", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(true, "Z", false, game);
 		wait(0.1);
-		(game:service("VirtualInputManager")):SendKeyEvent(false, "Z", false, game);
-		(game:service("VirtualInputManager")):SendKeyEvent(true, "X", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(false, "Z", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(true, "X", false, game);
 		wait(0.1);
-		(game:service("VirtualInputManager")):SendKeyEvent(false, "X", false, game);
+		(game:GetService("VirtualInputManager")):SendKeyEvent(false, "X", false, game);
 		DoneSkillGun = true;
 	end;
 	DoneSkillGun = false;
@@ -13890,8 +13902,8 @@ function useAllSkill()
 	DoneSkillFruit = false;
 	DoneSkillMelee = false;
 end;
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.DragonDojo["Auto Farm Blaze Ember"] then
 			pcall(function()
 				if ((game:GetService("Workspace")):WaitForChild("EmberTemplate")):FindFirstChild("Part") then
@@ -13922,8 +13934,8 @@ UpgradeDracoTrialToggle = DragonDojoTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.5) do
+task.spawn(function()
+	while task.wait(0.5) do
 		pcall(function()
 			if _G.Settings.DragonDojo["Auto Upgrade Draco Trial"] then
 				if GetQuestDracoLevel() == false then
@@ -13947,8 +13959,8 @@ DracoV1Toggle = DragonDojoTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.5) do
+task.spawn(function()
+	while task.wait(0.5) do
 		pcall(function()
 			if _G.Settings.DragonDojo["Auto Draco V1"] then
 				if GetM("Dragon Egg") <= 0 then
@@ -13976,8 +13988,8 @@ DracoV2Toggle = DragonDojoTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.5) do
+task.spawn(function()
+	while task.wait(0.5) do
 		if _G.Settings.DragonDojo["Auto Draco V2"] then
 			pcall(function()
 				local flowers = workspace:FindFirstChild("FireFlowers");
@@ -14018,8 +14030,8 @@ DracoV3Toggle = DragonDojoTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.5) do
+task.spawn(function()
+	while task.wait(0.5) do
 		pcall(function()
 			if _G.Settings.DragonDojo["Auto Draco V3"] then
 				repeat
@@ -14045,8 +14057,8 @@ RelicDracoTrialToggle = DragonDojoTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.5) do
+task.spawn(function()
+	while task.wait(0.5) do
 		if _G.Settings.DragonDojo["Auto Relic Draco Trial"] then
 			pcall(function()
 				local Root = game.Players.LocalPlayer.Character.HumanoidRootPart;
@@ -14231,8 +14243,8 @@ AutoSailBoatToggle = SeaEventTab:AddToggle({
 });
 
 local _BOAT_DEALER_CF2 = CFrame.new(-16927.451, 9.086, 433.864);
-spawn(function()
-	while wait() do
+task.spawn(function()
+	while task.wait(0.1) do
 		if _G._SailSeaActive then
 			pcall(function()
 				local plr = game.Players.LocalPlayer;
@@ -14302,8 +14314,8 @@ SeaEventTab:AddButton({
 	end
 });
 
-spawn(function()
-	while wait(0.1) do
+task.spawn(function()
+	while task.wait(0.1) do
 		pcall(function()
 			for _, boat in pairs(workspace.Boats:GetChildren()) do
 				for _, part in pairs(boat:GetDescendants()) do
@@ -14432,8 +14444,8 @@ AutoSummonPrehistoricIslandToggle = SeaStackTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		pcall(function()
 			if _G.Settings.SeaStack["Summon Prehistoric Island"] and World3 then
 				if not (game:GetService("Workspace")).Boats:FindFirstChild(_G.Settings.SeaEvent["Selected Boat"]) then
@@ -14480,8 +14492,8 @@ TweenToPrehistoricIslandToggle = SeaStackTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait() do
+task.spawn(function()
+	while task.wait(0.1) do
 		if _G.Settings.SeaStack["Tween To Prehistoric Island"] then
 			pcall(function()
 				if (game:GetService("Workspace"))._WorldOrigin.Locations:FindFirstChild("Prehistoric Island") then
@@ -14500,8 +14512,8 @@ AutoKillLavaGolemToggle = SeaStackTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.DragonDojo["Auto Kill Lava Golem"] and World3 then
 			pcall(function()
 				if (game:GetService("Workspace")).Enemies:FindFirstChild("Lava Golem") then
@@ -14540,8 +14552,8 @@ AutoSummonFrozenDimensionToggle = SeaStackTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		pcall(function()
 			if _G.Settings.SeaStack["Summon Frozen Dimension"] and World3 then
 				if not (game:GetService("Workspace")).Boats:FindFirstChild(_G.Settings.SeaEvent["Selected Boat"]) then
@@ -14587,8 +14599,8 @@ TweenToFrozenDimensionToggle = SeaStackTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.SeaStack["Tween To Frozen Dimension"] then
 			pcall(function()
 				repeat
@@ -14620,7 +14632,7 @@ SeaStackTab:AddToggle({
 		_G.AutoActivateLeviathan = state;
 	end
 });
-task.spawn(function()
+task.task.spawn(function()
 	while task.wait(0.5) do
 		if not _G.AutoActivateLeviathan then continue end
 		pcall(function()
@@ -14659,7 +14671,7 @@ SeaStackTab:AddToggle({
 		_G.AutoKillLeviathan = state;
 	end
 });
-task.spawn(function()
+task.task.spawn(function()
 	while task.wait(0.1) do
 		if not _G.AutoKillLeviathan then continue end
 		pcall(function()
@@ -14726,7 +14738,7 @@ SeaStackTab:AddToggle({
 		_G.AutoGetHeartLeviathan = state;
 	end
 });
-task.spawn(function()
+task.task.spawn(function()
 	while task.wait(0.5) do
 		if not _G.AutoGetHeartLeviathan then continue end
 		pcall(function()
@@ -14838,7 +14850,7 @@ SeaStackTab:AddToggle({
 		_G.AutoDriveBoat = state;
 	end
 });
-task.spawn(function()
+task.task.spawn(function()
 	while task.wait(0.5) do
 		if not _G.AutoDriveBoat then continue end
 		pcall(function()
@@ -14906,8 +14918,8 @@ TweenToKitsuneIslandToggle = SeaStackTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.SeaStack["Tween To Kitsune Island"] and World3 then
 			if (game:GetService("Workspace")).Map:FindFirstChild("KitsuneIsland") then
 				TweenPlayer(game.Workspace.Map.KitsuneIsland.ShrineActive.NeonShrinePart.CFrame * CFrame.new(0, 0, 10));
@@ -14915,8 +14927,8 @@ spawn(function()
 		end;
 	end;
 end);
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		pcall(function()
 			if _G.Settings.SeaStack["Summon Kitsune Island"] and World3 then
 				if not (game:GetService("Workspace")).Boats:FindFirstChild(_G.Settings.SeaEvent["Selected Boat"]) then
@@ -14961,8 +14973,8 @@ AutoCollectAzureEmberToggle = SeaStackTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.SeaStack["Auto Collect Azure Ember"] and World3 then
 			pcall(function()
 				if (game:GetService("Workspace")):FindFirstChild("AttachedAzureEmber") then
@@ -15001,8 +15013,8 @@ function GetCountMaterials(MaterialName)
 		end;
 	end;
 end;
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.SeaStack["Auto Trade Azure Ember"] and World3 then
 			pcall(function()
 				local AzureAvilable = GetCountMaterials("Azure Ember");
@@ -15042,8 +15054,8 @@ SeaStackTab:AddToggle({
 		if _G.Settings and _G.Settings.SeaStack then _G.Settings.SeaStack["Auto Find Mirage"] = state; (getgenv()).SaveSetting(); end;
 	end
 });
-spawn(function()
-	while wait(0.5) do
+task.spawn(function()
+	while task.wait(0.5) do
 		pcall(function()
 			if not _G.FindMirage then return; end;
 			local plr = game.Players.LocalPlayer;
@@ -15198,7 +15210,7 @@ AutoAttackSeaBeastsToggle = SeaStackTab:AddToggle({
 });
 spawn(function()
 	pcall(function()
-		while wait() do
+		while task.wait(0.1) do
 			if _G.Settings.SeaStack["Auto Attack Seabeasts"] and (World2 or World3) then
 				if (game:GetService("Workspace")):FindFirstChild("SeaBeasts") then
 					for i, v in pairs((game:GetService("Workspace")).SeaBeasts:GetChildren()) do
@@ -15264,8 +15276,8 @@ IncreaseSpeedBoatToggle = SeaSettingsTab:AddToggle({
 		_G.Settings.SettingSea["Increase Speed Boat"] = state;
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		pcall(function()
 			local vehicleSeats = {};
 			for i, v in pairs(game.Workspace.Boats:GetDescendants()) do
@@ -15292,8 +15304,8 @@ NoClipRockToggle = SeaSettingsTab:AddToggle({
 		_G.Settings.SettingSea["No Clip Rock"] = state;
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		pcall(function()
 			for i, boat in pairs((game:GetService("Workspace")).Boats:GetChildren()) do
 				for _, v in pairs((game:GetService("Workspace")).Boats[boat.Name]:GetDescendants()) do
@@ -15420,8 +15432,8 @@ DoneSkillGun = false;
 DoneSkillSword = false;
 DoneSkillFruit = false;
 DoneSkillMelee = false;
-spawn(function()
-	while wait() do
+task.spawn(function()
+	while task.wait(0.1) do
 		pcall(function()
 			if _G.SeaSkill then
 				if _G.Settings.SettingSea["Use Devil Fruit Skill"] and DoneSkillFruit == false then
@@ -15433,29 +15445,29 @@ spawn(function()
 						end;
 					end;
 					if _G.Settings.SettingSea["Devil Fruit Z Skill"] then
-						(game:service("VirtualInputManager")):SendKeyEvent(true, "Z", false, game);
+						(game:GetService("VirtualInputManager")):SendKeyEvent(true, "Z", false, game);
 						wait();
-						(game:service("VirtualInputManager")):SendKeyEvent(false, "Z", false, game);
+						(game:GetService("VirtualInputManager")):SendKeyEvent(false, "Z", false, game);
 					end;
 					if _G.Settings.SettingSea["Devil Fruit X Skill"] then
-						(game:service("VirtualInputManager")):SendKeyEvent(true, "X", false, game);
+						(game:GetService("VirtualInputManager")):SendKeyEvent(true, "X", false, game);
 						wait();
-						(game:service("VirtualInputManager")):SendKeyEvent(false, "X", false, game);
+						(game:GetService("VirtualInputManager")):SendKeyEvent(false, "X", false, game);
 					end;
 					if _G.Settings.SettingSea["Devil Fruit C Skill"] then
-						(game:service("VirtualInputManager")):SendKeyEvent(true, "C", false, game);
+						(game:GetService("VirtualInputManager")):SendKeyEvent(true, "C", false, game);
 						wait();
-						(game:service("VirtualInputManager")):SendKeyEvent(false, "C", false, game);
+						(game:GetService("VirtualInputManager")):SendKeyEvent(false, "C", false, game);
 					end;
 					if _G.Settings.SettingSea["Devil Fruit V Skill"] then
-						(game:service("VirtualInputManager")):SendKeyEvent(true, "V", false, game);
+						(game:GetService("VirtualInputManager")):SendKeyEvent(true, "V", false, game);
 						wait();
-						(game:service("VirtualInputManager")):SendKeyEvent(false, "V", false, game);
+						(game:GetService("VirtualInputManager")):SendKeyEvent(false, "V", false, game);
 					end;
 					if _G.Settings.SettingSea["Devil Fruit F Skill"] then
-						(game:service("VirtualInputManager")):SendKeyEvent(true, "F", false, game);
+						(game:GetService("VirtualInputManager")):SendKeyEvent(true, "F", false, game);
 						wait();
-						(game:service("VirtualInputManager")):SendKeyEvent(false, "F", false, game);
+						(game:GetService("VirtualInputManager")):SendKeyEvent(false, "F", false, game);
 					end;
 					DoneSkillFruit = true;
 				end;
@@ -15468,24 +15480,24 @@ spawn(function()
 						end;
 					end;
 					if _G.Settings.SettingSea["Melee Z Skill"] then
-						(game:service("VirtualInputManager")):SendKeyEvent(true, "Z", false, game);
+						(game:GetService("VirtualInputManager")):SendKeyEvent(true, "Z", false, game);
 						wait(0);
-						(game:service("VirtualInputManager")):SendKeyEvent(false, "Z", false, game);
+						(game:GetService("VirtualInputManager")):SendKeyEvent(false, "Z", false, game);
 					end;
 					if _G.Settings.SettingSea["Melee X Skill"] then
-						(game:service("VirtualInputManager")):SendKeyEvent(true, "X", false, game);
+						(game:GetService("VirtualInputManager")):SendKeyEvent(true, "X", false, game);
 						wait(0);
-						(game:service("VirtualInputManager")):SendKeyEvent(false, "X", false, game);
+						(game:GetService("VirtualInputManager")):SendKeyEvent(false, "X", false, game);
 					end;
 					if _G.Settings.SettingSea["Melee C Skill"] then
-						(game:service("VirtualInputManager")):SendKeyEvent(true, "C", false, game);
+						(game:GetService("VirtualInputManager")):SendKeyEvent(true, "C", false, game);
 						wait(0);
-						(game:service("VirtualInputManager")):SendKeyEvent(false, "C", false, game);
+						(game:GetService("VirtualInputManager")):SendKeyEvent(false, "C", false, game);
 					end;
 					if _G.Settings.SettingSea["Melee V Skill"] then
-						(game:service("VirtualInputManager")):SendKeyEvent(true, "V", false, game);
+						(game:GetService("VirtualInputManager")):SendKeyEvent(true, "V", false, game);
 						wait(0);
-						(game:service("VirtualInputManager")):SendKeyEvent(false, "V", false, game);
+						(game:GetService("VirtualInputManager")):SendKeyEvent(false, "V", false, game);
 					end;
 					DoneSkillMelee = true;
 				end;
@@ -15497,12 +15509,12 @@ spawn(function()
 							end;
 						end;
 					end;
-					(game:service("VirtualInputManager")):SendKeyEvent(true, "Z", false, game);
+					(game:GetService("VirtualInputManager")):SendKeyEvent(true, "Z", false, game);
 					wait(0);
-					(game:service("VirtualInputManager")):SendKeyEvent(false, "Z", false, game);
-					(game:service("VirtualInputManager")):SendKeyEvent(true, "X", false, game);
+					(game:GetService("VirtualInputManager")):SendKeyEvent(false, "Z", false, game);
+					(game:GetService("VirtualInputManager")):SendKeyEvent(true, "X", false, game);
 					wait(0);
-					(game:service("VirtualInputManager")):SendKeyEvent(false, "X", false, game);
+					(game:GetService("VirtualInputManager")):SendKeyEvent(false, "X", false, game);
 					DoneSkillSword = true;
 				end;
 				if _G.Settings.SettingSea["Use Gun Skill"] and DoneSkillGun == false then
@@ -15513,12 +15525,12 @@ spawn(function()
 							end;
 						end;
 					end;
-					(game:service("VirtualInputManager")):SendKeyEvent(true, "Z", false, game);
+					(game:GetService("VirtualInputManager")):SendKeyEvent(true, "Z", false, game);
 					wait(0.1);
-					(game:service("VirtualInputManager")):SendKeyEvent(false, "Z", false, game);
-					(game:service("VirtualInputManager")):SendKeyEvent(true, "X", false, game);
+					(game:GetService("VirtualInputManager")):SendKeyEvent(false, "Z", false, game);
+					(game:GetService("VirtualInputManager")):SendKeyEvent(true, "X", false, game);
 					wait(0.1);
-					(game:service("VirtualInputManager")):SendKeyEvent(false, "X", false, game);
+					(game:GetService("VirtualInputManager")):SendKeyEvent(false, "X", false, game);
 					DoneSkillGun = true;
 				end;
 				DoneSkillGun = false;
@@ -15579,51 +15591,51 @@ local function _SeaFruitM1Active()
 	end;
 	return false;
 end;
-local gg = getrawmetatable(game);
-local old = gg.__namecall;
-setreadonly(gg, false);
-gg.__namecall = newcclosure(function(...)
-	local method = getnamecallmethod();
-	local args = {
-		...
-	};
-	if tostring(method) == "FireServer" then
-		if tostring(args[1]) == "RemoteEvent" then
-			if tostring(args[2]) ~= "true" and tostring(args[2]) ~= "false" then
-				if Skillaimbot then
-					args[2] = AimBotSkillPosition;
-					return old(unpack(args));
+pcall(function()
+	local gg = getrawmetatable(game);
+	local old = gg.__namecall;
+	setreadonly(gg, false);
+	gg.__namecall = newcclosure(function(...)
+		local method = getnamecallmethod();
+		local args = { ... };
+		if tostring(method) == "FireServer" then
+			if tostring(args[1]) == "RemoteEvent" then
+				if tostring(args[2]) ~= "true" and tostring(args[2]) ~= "false" then
+					if Skillaimbot then
+						args[2] = AimBotSkillPosition;
+						return old(unpack(args));
+					end;
 				end;
 			end;
 		end;
-	end;
-	return old(...);
+		return old(...);
+	end);
 end);
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		pcall(function()
 			if UseSkill then
 				for i, v in pairs((game:GetService("Workspace")).Enemies:GetChildren()) do
 					if v.Name == MonFarm and v:FindFirstChild("Humanoid") and v:FindFirstChild("HumanoidRootPart") and v.Humanoid.Health <= v.Humanoid.MaxHealth * _G.Settings.Setting["Mastery Health"] / 100 then
 						if _G.Settings.Setting["Fruit Mastery Skill Z"] then
-							(game:service("VirtualInputManager")):SendKeyEvent(true, "Z", false, game);
-							(game:service("VirtualInputManager")):SendKeyEvent(false, "Z", false, game);
+							(game:GetService("VirtualInputManager")):SendKeyEvent(true, "Z", false, game);
+							(game:GetService("VirtualInputManager")):SendKeyEvent(false, "Z", false, game);
 						end;
 						if _G.Settings.Setting["Fruit Mastery Skill X"] then
-							(game:service("VirtualInputManager")):SendKeyEvent(true, "X", false, game);
-							(game:service("VirtualInputManager")):SendKeyEvent(false, "X", false, game);
+							(game:GetService("VirtualInputManager")):SendKeyEvent(true, "X", false, game);
+							(game:GetService("VirtualInputManager")):SendKeyEvent(false, "X", false, game);
 						end;
 						if _G.Settings.Setting["Fruit Mastery Skill C"] then
-							(game:service("VirtualInputManager")):SendKeyEvent(true, "C", false, game);
-							(game:service("VirtualInputManager")):SendKeyEvent(false, "C", false, game);
+							(game:GetService("VirtualInputManager")):SendKeyEvent(true, "C", false, game);
+							(game:GetService("VirtualInputManager")):SendKeyEvent(false, "C", false, game);
 						end;
 						if _G.Settings.Setting["Fruit Mastery Skill V"] then
-							(game:service("VirtualInputManager")):SendKeyEvent(true, "V", false, game);
-							(game:service("VirtualInputManager")):SendKeyEvent(false, "V", false, game);
+							(game:GetService("VirtualInputManager")):SendKeyEvent(true, "V", false, game);
+							(game:GetService("VirtualInputManager")):SendKeyEvent(false, "V", false, game);
 						end;
 						if _G.Settings.Setting["Fruit Mastery Skill F"] then
-							(game:service("VirtualInputManager")):SendKeyEvent(true, "F", false, game);
-							(game:service("VirtualInputManager")):SendKeyEvent(false, "F", false, game);
+							(game:GetService("VirtualInputManager")):SendKeyEvent(true, "F", false, game);
+							(game:GetService("VirtualInputManager")):SendKeyEvent(false, "F", false, game);
 						end;
 					end;
 				end;
@@ -15631,21 +15643,21 @@ spawn(function()
 		end);
 	end;
 end);
-spawn(function()
-	while wait() do
+task.spawn(function()
+	while task.wait(0.1) do
 		pcall(function()
 			if UseGunSkill then
 				for i, v in pairs((game:GetService("Workspace")).Enemies:GetChildren()) do
 					if v.Name == MonFarm and v:FindFirstChild("Humanoid") and v:FindFirstChild("HumanoidRootPart") and v.Humanoid.Health <= v.Humanoid.MaxHealth * _G.Settings.Setting["Mastery Health"] / 100 then
 						if _G.Settings.Setting["Gun Mastery Skill Z"] then
-							(game:service("VirtualInputManager")):SendKeyEvent(true, "Z", false, game);
+							(game:GetService("VirtualInputManager")):SendKeyEvent(true, "Z", false, game);
 							wait(0.5);
-							(game:service("VirtualInputManager")):SendKeyEvent(false, "Z", false, game);
+							(game:GetService("VirtualInputManager")):SendKeyEvent(false, "Z", false, game);
 						end;
 						if _G.Settings.Setting["Gun Mastery Skill X"] then
-							(game:service("VirtualInputManager")):SendKeyEvent(true, "X", false, game);
+							(game:GetService("VirtualInputManager")):SendKeyEvent(true, "X", false, game);
 							wait(0.5);
-							(game:service("VirtualInputManager")):SendKeyEvent(false, "X", false, game);
+							(game:GetService("VirtualInputManager")):SendKeyEvent(false, "X", false, game);
 						end;
 					end;
 				end;
@@ -15670,8 +15682,8 @@ AutoActiveRaceV4Toggle = LocalPlayerTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.LocalPlayer["Active Race V4"] then
 			if tonumber(((game:GetService("Players")).LocalPlayer.Character:WaitForChild("RaceEnergy")).Value) == 1 then
 				if (game:GetService("Players")).LocalPlayer.Character.RaceTransformed.Value == false then
@@ -15700,7 +15712,7 @@ WalkOnWaterToggle = LocalPlayerTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
+task.spawn(function()
 	while task.wait(0.2) do
 		pcall(function()
 			if _G.Settings.LocalPlayer["Walk On Water"] then
@@ -15903,8 +15915,8 @@ FruitNotification = FruitTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(2) do
+task.spawn(function()
+	while task.wait(2) do
 		if _G.Settings.Fruit["Fruit Notification"] then
 			for i, v in pairs(game.Workspace:GetChildren()) do
 				if string.find(v.Name, "Fruit") then
@@ -16079,8 +16091,8 @@ TeleportToFruitToggle = FruitTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		if _G.Settings.Fruit["Teleport To Fruit"] then
 			local char = game.Players.LocalPlayer.Character;
 			if not char then continue; end;
@@ -16119,8 +16131,8 @@ TweenToFruitToggle = FruitTab:AddToggle({
 		(getgenv()).SaveSetting();
 	end
 });
-spawn(function()
-	while wait(0.5) do
+task.spawn(function()
+	while task.wait(0.5) do
 		if _G.Settings.Fruit["Tween To Fruit"] and not _G.FruitInterrupt then
 			local fruit = _getFruitInWorkspace();
 			if fruit then
@@ -16323,7 +16335,7 @@ GameTimeParagraph = ServerTab:AddParagraph({
 	Image = "timer",
 	ImageSize = 20
 });
-spawn(function()
+task.spawn(function()
 	while task.wait() do
 		pcall(function()
 			local GameTime = math.floor(workspace.DistributedGameTime + 0.5);
@@ -16340,7 +16352,7 @@ FpsParagraph = ServerTab:AddParagraph({
 	Image = "monitor",
 	ImageSize = 20
 });
-spawn(function()
+task.spawn(function()
 	while task.wait() do
 		pcall(function()
 			FpsParagraph:SetDesc(workspace:GetRealPhysicsFPS());
@@ -16353,7 +16365,7 @@ PingParagraph = ServerTab:AddParagraph({
 	Image = "signal",
 	ImageSize = 20
 });
-spawn(function()
+task.spawn(function()
 	while task.wait() do
 		pcall(function()
 			PingParagraph:SetDesc((game:GetService("Stats")).Network.ServerStatsItem["Data Ping"]:GetValueString());
@@ -16384,7 +16396,7 @@ PrehistoricStatusParagraph = ServerTab:AddParagraph({
 	Title = "Prehistoric Status",
 	Desc = "N/A"
 });
-spawn(function()
+task.spawn(function()
 	while task.wait() do
 		pcall(function()
 			if (game:GetService("Lighting")).Sky.MoonTextureId == "http://www.roblox.com/asset/id=9709149431" then
@@ -16459,8 +16471,8 @@ spawn(function()
 		end;
 	end);
 end);
-spawn(function()
-	while wait(0.2) do
+task.spawn(function()
+	while task.wait(0.2) do
 		pcall(function()
 			local response = (((game:GetService("ReplicatedStorage")):WaitForChild("Remotes")):WaitForChild("CommF_")):InvokeServer("ColorsDealer", "1");
 			if response then
@@ -16770,19 +16782,6 @@ getgenv().UseConfiguredSkills = function(targetPosition)
 	end)
 end
 
-local _DUNGEON_PLACE_ID = 73902483975735;
-local WorldDungeon = (game.PlaceId == _DUNGEON_PLACE_ID);
-
-local _G_Dungeon = {
-	AutoFuseRings   = false,
-	AutoSpinRings   = false,
-	AutoEnterDungeon= false,
-	AutoCompleteDungeon = false,
-	AutoSkipHub     = false,
-	SelectBuffs     = false,
-	AutoFullyDungeon= false,
-	SelectedBuffs   = {},
-};
 
 local _DUNGEON_BUFF_LIST = {
 	"ATK Up","DEF Up","SPD Up","HP Up",
@@ -16966,7 +16965,7 @@ local function _DungeonKillFloor()
 	end;
 end;
 
-spawn(function()
+task.spawn(function()
 	while task.wait(0.5) do
 		if _G_Dungeon.AutoCompleteDungeon or _G_Dungeon.AutoFullyDungeon then
 			pcall(function()
@@ -16990,7 +16989,7 @@ spawn(function()
 	end;
 end);
 
-spawn(function()
+task.spawn(function()
 	while task.wait(1) do
 		if _G_Dungeon.AutoFullyDungeon and WorldDungeon then
 			pcall(function()
@@ -17024,7 +17023,7 @@ DungeonTab:AddToggle({
 		_G_Dungeon.AutoFuseRings = state;
 	end
 });
-spawn(function()
+task.spawn(function()
 	while task.wait(3) do
 		if _G_Dungeon.AutoFuseRings and WorldDungeon then
 			pcall(_DungeonFuseRings);
@@ -17040,7 +17039,7 @@ DungeonTab:AddToggle({
 		_G_Dungeon.AutoSpinRings = state;
 	end
 });
-spawn(function()
+task.spawn(function()
 	while task.wait(3) do
 		if _G_Dungeon.AutoSpinRings and WorldDungeon then
 			pcall(_DungeonSpinRings);
@@ -17058,7 +17057,7 @@ DungeonTab:AddToggle({
 		_G_Dungeon.AutoEnterDungeon = state;
 	end
 });
-spawn(function()
+task.spawn(function()
 	while task.wait(2) do
 		if _G_Dungeon.AutoEnterDungeon and WorldDungeon then
 			pcall(_DungeonEnter);
